@@ -8,7 +8,7 @@ It's GiphyTags meets SwiftUI!!
 
 It is written in Swift 5 and Xcode 11.4 beta (11N111s).
 
-It queries the GIPHY website via its URL interface, and uses the tags returned to search deeper and deeper.  (This isn't necessarily a good thing.)
+It queries the GIPHY website via its URL interface, and uses the tags returned to search deeper and deeper.  (This isn't necessarily a good thing.)  To use the app you will need to get an API key.  The app can open the Giphy website and take you there.
 
 GIPHY Tags uses lots of Swift and iOS features:  
 
