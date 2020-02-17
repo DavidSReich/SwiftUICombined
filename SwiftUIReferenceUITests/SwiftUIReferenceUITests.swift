@@ -3,41 +3,53 @@
 //  SwiftUIReferenceUITests
 //
 //  Created by David S Reich on 8/12/19.
-//  Copyright © 2019 Stellar Software Pty Ltd. All rights reserved.
+//  Copyright © 2020 Stellar Software Pty Ltd. All rights reserved.
 //
 
 import XCTest
 
 class SwiftUIReferenceUITests: XCTestCase {
 
+    let app = XCUIApplication()
+
     override func setUp() {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-
-        // In UI tests it is usually best to stop immediately when a failure occurs.
         continueAfterFailure = false
-
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
-    }
-
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
-    func testExample() {
-        // UI tests must launch the application that they test.
-        let app = XCUIApplication()
         app.launch()
 
-        // Use recording to get started writing UI tests.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+        let navBar = app.navigationBars["Starting Images"]
+        let exists = NSPredicate(format: "exists == 1")
+        expectation(for: exists, evaluatedWith: navBar, handler: nil)
+        waitForExpectations(timeout: 8, handler: nil)
     }
 
-    func testLaunchPerformance() {
-        if #available(macOS 10.15, iOS 13.0, tvOS 13.0, *) {
-            // This measures how long it takes to launch your application.
-            measure(metrics: [XCTOSSignpostMetric.applicationLaunch]) {
-                XCUIApplication().launch()
-            }
-        }
+    func testSwiftUIReference() {
+        // UI tests must launch the application that they test.
+
+        let settingsButton = app.navigationBars["Starting Images"].buttons["Settings"]
+
+        settingsButton.tap()
+
+        let resetButton = app.buttons["Reset"]
+        XCTAssertNotNil(resetButton)
+        resetButton.tap()
+
+        let startingTags = app.tables.otherElements["Starting Tags\nweather"]
+        XCTAssertNotNil(startingTags)
+
+        let startingTag = app.tables.otherElements["weather"]
+        XCTAssertNotNil(startingTag)
+
+        let maxOfImages5Element = app.tables.otherElements["Max # of images\n5"]
+        XCTAssertNotNil(maxOfImages5Element)
+
+        let imageStepper = app.otherElements["imageStepper"]
+        XCTAssertNotNil(imageStepper)
+
+        let plusCoordinate = imageStepper.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.5))
+        plusCoordinate.tap()
+        plusCoordinate.tap()
+
+        let maxOfImages7Element = app.tables.otherElements["Max # of images\n7"]
+        XCTAssertNotNil(maxOfImages7Element)
     }
 }
