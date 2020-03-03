@@ -15,9 +15,12 @@ import Alamofire
 
 class JSONNetworkService {
 
+    typealias ObservableData = Observable<DataResult>
+
     class func getJSON(urlString: String,
                        networkingType: UserSettings.NetworkingType,
-                       completion: @escaping (Swift.Result<Data, ReferenceError>) -> Void) -> ReferenceError? {
+                       not200Handler: HTTPURLResponseNot200? = nil,
+                       completion: @escaping (DataResult) -> Void) -> ReferenceError? {
 
         guard let urlString = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
             print("Cannot make URL")
@@ -25,36 +28,46 @@ class JSONNetworkService {
         }
 
         if networkingType == .alamoFire {
-            _ = SessionManager.sessionManagerDataTask(urlString: urlString, mimeType: "application/json", completion: completion)
+            _ = SessionManager.sessionManagerDataTask(urlString: urlString,
+                                                      mimeType: "application/json",
+                                                      not200Handler: not200Handler,
+                                                      completion: completion)
         } else {
-            _ = URLSession.urlSessionDataTask(urlString: urlString, mimeType: "application/json", completion: completion)
+            _ = URLSession.urlSessionDataTask(urlString: urlString,
+                                              mimeType: "application/json",
+                                              not200Handler: not200Handler,
+                                              completion: completion)
         }
 
         return nil
     }
 
     class func getJSONObservable(urlString: String,
-                                 networkingType: UserSettings.NetworkingType) -> Observable<Swift.Result<Data, ReferenceError>>? {
+                                 networkingType: UserSettings.NetworkingType,
+                                 not200Handler: HTTPURLResponseNot200? = nil) -> ObservableData? {
 
         guard let urlString = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
             print("Cannot make URL")
             return nil
         }
 
-        var jsonObservable: Observable<Swift.Result<Data, ReferenceError>>?
+        var jsonObservable: ObservableData?
 
         if networkingType == .alamoFire {
-            jsonObservable = createAlamofireRequestObservable(urlString: urlString)
+            jsonObservable = createAlamofireObservable(urlString: urlString, not200Handler: not200Handler)
         } else {
-            jsonObservable = createURLSessionDataTaskObservable(urlString: urlString)
+            jsonObservable = createURLSessionDataTaskObservable(urlString: urlString, not200Handler: not200Handler)
         }
 
         return jsonObservable
     }
 
-    private static func createURLSessionDataTaskObservable(urlString: String) -> Observable<Swift.Result<Data, ReferenceError>> {
-        return Observable<Swift.Result<Data, ReferenceError>>.create({ (observer) -> Disposable in
-            let dataTask = URLSession.urlSessionDataTask(urlString: urlString, mimeType: "application/json") { result in
+    private static func createURLSessionDataTaskObservable(urlString: String,
+                                                           not200Handler: HTTPURLResponseNot200? = nil) -> ObservableData {
+        return ObservableData.create({ (observer) -> Disposable in
+            let dataTask = URLSession.urlSessionDataTask(urlString: urlString,
+                                                         mimeType: "application/json",
+                                                         not200Handler: not200Handler) { result in
                 JSONNetworkService.handleResult(result: result, observer: observer)
             }
 
@@ -71,9 +84,11 @@ class JSONNetworkService {
         })
     }
 
-    private static func createAlamofireRequestObservable(urlString: String) -> Observable<Swift.Result<Data, ReferenceError>> {
-        return Observable<Swift.Result<Data, ReferenceError>>.create({ (observer) -> Disposable in
-            let dataRequest = SessionManager.sessionManagerDataTask(urlString: urlString, mimeType: "application/json") { result in
+    private static func createAlamofireObservable(urlString: String, not200Handler: HTTPURLResponseNot200? = nil) -> ObservableData {
+        return ObservableData.create({ (observer) -> Disposable in
+            let dataRequest = SessionManager.sessionManagerDataTask(urlString: urlString,
+                                                                    mimeType: "application/json",
+                                                                    not200Handler: not200Handler) { result in
                 JSONNetworkService.handleResult(result: result, observer: observer)
             }
 
@@ -83,8 +98,8 @@ class JSONNetworkService {
         })
     }
 
-    private static func handleResult(result: Swift.Result<Data, ReferenceError>,
-                                     observer: AnyObserver<Swift.Result<Data, ReferenceError>>) {
+    private static func handleResult(result: DataResult,
+                                     observer: AnyObserver<DataResult>) {
         switch result {
         case .success:
             observer.onNext(result)

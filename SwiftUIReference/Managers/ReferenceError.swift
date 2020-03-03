@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum ReferenceError: Error {
+public enum ReferenceError: Error {
     //Session/network errors
     case dataTask(error: Error)
     case noResponse

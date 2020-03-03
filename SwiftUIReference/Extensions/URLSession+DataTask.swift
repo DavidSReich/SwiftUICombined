@@ -11,7 +11,8 @@ import Foundation
 extension URLSession {
     class func urlSessionDataTask(urlString: String,
                                   mimeType: String,
-                                  completion: @escaping (Result<Data, ReferenceError>) -> Void) -> URLSessionDataTask? {
+                                  not200Handler: HTTPURLResponseNot200? = nil,
+                                  completion: @escaping (DataResult) -> Void) -> URLSessionDataTask? {
 
         guard let url = URL(string: urlString) else {
             print("Cannot make URL")
@@ -21,7 +22,12 @@ extension URLSession {
 
         //using an URLRequest object is not necessary in this usage
         let dataTask = URLSession.shared.dataTask(with: url) { data, response, error in
-            HTTPURLResponse.validateData(data: data, response: response, error: error, mimeType: mimeType, completion: completion)
+            HTTPURLResponse.validateData(data: data,
+                                         response: response,
+                                         error: error,
+                                         mimeType: mimeType,
+                                         not200Handler: not200Handler,
+                                         completion: completion)
         }
 
         dataTask.resume()

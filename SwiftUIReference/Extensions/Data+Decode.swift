@@ -8,6 +8,8 @@
 
 import Foundation
 
+public typealias DataResult = Result<Data, ReferenceError>
+
 extension Data {
     func decodeData<T: Decodable>() -> Result<T, ReferenceError> {
         let decoder = JSONDecoder()

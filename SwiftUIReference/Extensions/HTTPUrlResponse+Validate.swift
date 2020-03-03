@@ -8,12 +8,19 @@
 
 import Foundation
 
+protocol HTTPURLResponseNot200 {
+    // handle non-200 response codes -- in case there's more info available
+    // returns true if it "consumes" the case
+    func responseHandler(urlResponse: HTTPURLResponse, data: Data?, completion: @escaping (DataResult) -> Void) -> Bool
+}
+
 extension HTTPURLResponse {
     static func validateData(data: Data?,
                              response: URLResponse?,
                              error: Error?,
                              mimeType: String?,
-                             completion: @escaping (Result<Data, ReferenceError>) -> Void) {
+                             not200Handler: HTTPURLResponseNot200? = nil,
+                             completion: @escaping (DataResult) -> Void) {
         if let error = error {
             print("DataTask error: \(error)")
             completion(.failure(.dataTask(error: error)))
@@ -41,16 +48,8 @@ extension HTTPURLResponse {
         }
 
         guard urlResponse.statusCode == 200 else {
-            if [401, 403].contains(urlResponse.statusCode), let data = data {
-                let result: Result<MessageModel, ReferenceError> = data.decodeData()
-
-                if case .success(let messageModel) = result {
-                    //print("403 error: \(messageModel.message)")
-                    var message = messageModel.message
-                    if urlResponse.statusCode == 403 {
-                        message = "API Key might be incorrect.  Go to Settings to check it."
-                    }
-                    completion(.failure(.apiNotHappy(message: message)))
+            if let not200Handler = not200Handler {
+                if not200Handler.responseHandler(urlResponse: urlResponse, data: data, completion: completion) {
                     return
                 }
             }

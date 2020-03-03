@@ -45,16 +45,19 @@ class DataManager {
         clearDataSource()
 
         if useRxSwift {
-            getJSONWithRxSwift(urlString: urlString, networkingType: networkingType, completion: completion)
+            getJSONWithRxSwift(urlString: urlString, networkingType: networkingType, not200Handler: self, completion: completion)
         } else {
-            getJSONWithoutRxSwift(urlString: urlString, networkingType: networkingType, completion: completion)
+            getJSONWithoutRxSwift(urlString: urlString, networkingType: networkingType, not200Handler: self, completion: completion)
         }
     }
 
     private func getJSONWithoutRxSwift(urlString: String,
                                        networkingType: UserSettings.NetworkingType,
+                                       not200Handler: HTTPURLResponseNot200? = nil,
                                        completion: @escaping (_ referenceError: ReferenceError?) -> Void) {
-        let referenceError = JSONNetworkService.getJSON(urlString: urlString, networkingType: networkingType) { result in
+        let referenceError = JSONNetworkService.getJSON(urlString: urlString,
+                                                        networkingType: networkingType,
+                                                        not200Handler: not200Handler) { result in
             switch result {
             case .success(let data):
                 self.handleData(data: data, completion: completion)
@@ -70,8 +73,11 @@ class DataManager {
 
     private func getJSONWithRxSwift(urlString: String,
                                     networkingType: UserSettings.NetworkingType,
+                                    not200Handler: HTTPURLResponseNot200? = nil,
                                     completion: @escaping (_ referenceError: ReferenceError?) -> Void) {
-        guard let jsonObservable = JSONNetworkService.getJSONObservable(urlString: urlString, networkingType: networkingType) else {
+        guard let jsonObservable = JSONNetworkService.getJSONObservable(urlString: urlString,
+                                                                        networkingType: networkingType,
+                                                                        not200Handler: not200Handler) else {
             completion(.badURL)
             return
         }
@@ -160,5 +166,29 @@ extension DataManager: ResultDictProtocol {
 
     var tagString: String {
         return currentTagString
+    }
+}
+
+extension DataManager: HTTPURLResponseNot200 {
+    // handle non-200 response codes -- in case there's more info available
+    // returns true if it "consumes" the case
+    func responseHandler(urlResponse: HTTPURLResponse,
+                         data: Data?,
+                         completion: @escaping (DataResult) -> Void) -> Bool {
+        if [401, 403].contains(urlResponse.statusCode), let data = data {
+            let result: Result<MessageModel, ReferenceError> = data.decodeData()
+
+            if case .success(let messageModel) = result {
+                //print("403 error: \(messageModel.message)")
+                var message = messageModel.message
+                if urlResponse.statusCode == 403 {
+                    message = "API Key might be incorrect.  Go to Settings to check it."
+                }
+                completion(.failure(.apiNotHappy(message: message)))
+                return true
+            }
+        }
+
+        return false
     }
 }

@@ -11,13 +11,15 @@ import Alamofire
 extension SessionManager {
     class func sessionManagerDataTask(urlString: String,
                                       mimeType: String,
-                                      completion: @escaping (Swift.Result<Data, ReferenceError>) -> Void) -> DataRequest {
+                                      not200Handler: HTTPURLResponseNot200? = nil,
+                                      completion: @escaping (DataResult) -> Void) -> DataRequest {
 
         let dataRequest = SessionManager.default.request(urlString).response { response in
             HTTPURLResponse.validateData(data: response.data,
                                          response: response.response,
                                          error: response.error,
                                          mimeType: mimeType,
+                                         not200Handler: not200Handler,
                                          completion: completion)
         }
 
