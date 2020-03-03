@@ -13,6 +13,8 @@ class HTTPUrlResponseValidateTests: XCTestCase {
 
     private var goodJSONData = Data()
     private var goodHttpUrlResponse = HTTPURLResponse()
+    private var bad401HttpUrlResponse = HTTPURLResponse()
+    private var bad403HttpUrlResponse = HTTPURLResponse()
     private var badHttpUrlResponse = HTTPURLResponse()
     private var goodUrlResponse = URLResponse()
     private var error: ReferenceError?
@@ -32,6 +34,18 @@ class HTTPUrlResponseValidateTests: XCTestCase {
             self.badHttpUrlResponse = badHttpUrlResponse
         } else {
             XCTFail("Couldn't create badHTTPUrlResponse!!")
+        }
+
+        if let bad401HttpUrlResponse = HTTPURLResponse(url: dummyURL!, statusCode: 401, httpVersion: nil, headerFields: nil) {
+            self.bad401HttpUrlResponse = bad401HttpUrlResponse
+        } else {
+            XCTFail("Couldn't create bad401HttpUrlResponse!!")
+        }
+
+        if let bad403HttpUrlResponse = HTTPURLResponse(url: dummyURL!, statusCode: 403, httpVersion: nil, headerFields: nil) {
+            self.bad403HttpUrlResponse = bad403HttpUrlResponse
+        } else {
+            XCTFail("Couldn't create bad403HttpUrlResponse!!")
         }
 
         self.goodUrlResponse = URLResponse(url: dummyURL!, mimeType: dummyMimeType, expectedContentLength: 1000, textEncodingName: nil)
@@ -114,11 +128,43 @@ class HTTPUrlResponseValidateTests: XCTestCase {
         }
     }
 
+    func test401HttpUrlResponseCode() {
+        HTTPURLResponse.validateData(data: BaseTestUtilities.getMessageModelData(), response: bad401HttpUrlResponse, error: nil, mimeType: nil, not200Handler: self) { result in
+            switch result {
+            case .success:
+                XCTFail("Should fail with apiNotHappy error.  But it didn't fail.")
+                return
+            case .failure(let referenceError):
+                if case ReferenceError.apiNotHappy(message: let message) = referenceError {
+                    XCTAssertEqual("Invalid authentication credentials", message)
+                } else {
+                    XCTFail("urlResponse should fail with apiNotHappy error.  Instead failed with \(referenceError).")
+                }
+            }
+        }
+    }
+
+    func test403HttpUrlResponseCode() {
+        HTTPURLResponse.validateData(data: BaseTestUtilities.getMessageModelData(), response: bad403HttpUrlResponse, error: nil, mimeType: nil, not200Handler: self) { result in
+            switch result {
+            case .success:
+                XCTFail("Should fail with apiNotHappy error.  But it didn't fail.")
+                return
+            case .failure(let referenceError):
+                if case ReferenceError.apiNotHappy(message: let message) = referenceError {
+                    XCTAssertEqual("API Key might be incorrect.  Go to Settings to check it.", message)
+                } else {
+                    XCTFail("urlResponse should fail with apiNotHappy error.  Instead failed with \(referenceError).")
+                }
+            }
+        }
+    }
+
     func testBadResponseCode() {
         HTTPURLResponse.validateData(data: goodJSONData, response: badHttpUrlResponse, error: nil, mimeType: nil) { result in
             switch result {
             case .success:
-                XCTFail("Should fail with noResponse error.  But it didn't fail.")
+                XCTFail("Should fail with responseNot200 error.  But it didn't fail.")
                 return
             case .failure(let referenceError):
                 if case ReferenceError.responseNot200(responseCode: let responseCode) = referenceError {
@@ -160,5 +206,30 @@ class HTTPUrlResponseValidateTests: XCTestCase {
                 XCTFail("urlResponse should fail with noData.  Instead failed with \(referenceError).")
             }
         }
+    }
+
+    private func handle401and403() {
+    }
+}
+
+extension HTTPUrlResponseValidateTests: HTTPURLResponseNot200 {
+    // handle non-200 response codes -- in case there's more info available
+    // returns true if it "consumes" the case
+    func responseHandler(urlResponse: HTTPURLResponse, data: Data?, completion: @escaping (DataResult) -> Void) -> Bool {
+        if [401, 403].contains(urlResponse.statusCode), let data = data {
+            let result: Result<MessageModel, ReferenceError> = data.decodeData()
+
+            if case .success(let messageModel) = result {
+                //print("403 error: \(messageModel.message)")
+                var message = messageModel.message
+                if urlResponse.statusCode == 403 {
+                    message = "API Key might be incorrect.  Go to Settings to check it."
+                }
+                completion(.failure(.apiNotHappy(message: message)))
+                return true
+            }
+        }
+
+        return false
     }
 }

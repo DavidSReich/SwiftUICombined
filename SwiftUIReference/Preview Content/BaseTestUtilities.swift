@@ -65,6 +65,13 @@ class BaseTestUtilities {
         }
     """
 
+    static private let messageModelString =
+    """
+        {
+            "message": "Invalid authentication credentials"
+        }
+    """
+
     static private func imagesModelString() -> String {
         return """
             {
@@ -117,6 +124,10 @@ class BaseTestUtilities {
 
     class func getMetaModelData() -> Data {
         return Data(metaModelString.utf8)
+    }
+
+    class func getMessageModelData() -> Data {
+        return Data(messageModelString.utf8)
     }
 
     class func getImagesModelData() -> Data {
