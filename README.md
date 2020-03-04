@@ -1,3 +1,7 @@
+Currently updating SwiftUIReference.  MVVMizing it for better dependency injection.
+Hopefully this will allow previews (and unit testing of Views) to work without making API calls.
+And a little bit of refactoring.
+
 # SwiftUIReference
 
 What is SwiftUIReference?
