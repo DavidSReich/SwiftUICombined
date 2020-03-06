@@ -32,6 +32,6 @@ struct GifView: UIViewRepresentable {
 
 struct GifView_Previews: PreviewProvider {
     static var previews: some View {
-        GifView(imageUrlString: "https://media0.giphy.com/media/10N782ExqDjCLK/giphy.gif")
+        GifView(imageUrlString: Bundle.main.url(forResource: "fish", withExtension: "gif")!.absoluteString)
     }
 }

@@ -18,7 +18,11 @@ import SwiftUI
 
 struct SolitaryMainView: View {
 
-    private let dataManager: DataManagerProtocol = DataManager()
+    //inject this
+    @State private var solitaryViewModel = SolitaryViewModel(dataManager: DataManager(),
+                                                             userSettings: UserDefaultsManager.getUserSettings())
+
+//    private let dataManager: DataManagerProtocol = DataManager()
 
     @State private var imageModels = [ImageDataModelProtocolWrapper]()
     @State private var nextImageTags = ""
@@ -29,15 +33,15 @@ struct SolitaryMainView: View {
     @State private var showingAlert = false
 
     // these cannot be private because the init() won't work
-    @State var userSettings: UserSettings
-    @State var mainViewLevel: Int
-    @State var imageTags: String
+//    @State var userSettings: UserSettings
+//    @State var mainViewLevel: Int
+//    @State var imageTags: String
 
     @State private var alertMessageString: String?
 
-    let settingsButtonText = "Settings"
-    let pickTagsButtonText = "Pick Tags"
-    let startButtonText = "Start"
+//    let settingsButtonText = "Settings"
+//    let pickTagsButtonText = "Pick Tags"
+//    let startButtonText = "Start"
 
     // body used to be a lot more complicated, but still is helped by breaking it down into several funcs
     var body: some View {
@@ -61,7 +65,7 @@ struct SolitaryMainView: View {
     private func mainView() -> some View {
         VStack {
             baseListWithNavBarView()
-            .navigationBarTitle(Text(getTitle()), displayMode: .inline)
+            .navigationBarTitle(Text(solitaryViewModel.title), displayMode: .inline)
             .onAppear(perform: loadEverything)
         }
     }
@@ -80,19 +84,18 @@ struct SolitaryMainView: View {
                 ImageRowView(imageModel: self.imageModels[index].imageModel, showOnLeft: index.isMultiple(of: 2))
             }
         }
-
     }
 
     private func leadingNavigationItem() -> some View {
         // swiftlint:disable multiple_closures_with_trailing_closure
-        Button(getBackButtonText()) {
-            if self.getBackButtonText() == self.settingsButtonText {
+        Button(solitaryViewModel.backButtonText) {
+            if self.solitaryViewModel.isBackButtonSettings {
                 self.settingsChanged = false
                 self.showingSettingsView = true
             } else {
                 //print(">>>>> mainViewLevel = \(self.mainViewLevel)")
 
-                let nextMainViewLevel = self.mainViewLevel > 1 ? self.mainViewLevel - 1 : 0
+                let nextMainViewLevel = self.solitaryViewModel.mainViewLevel > 1 ? self.solitaryViewModel.mainViewLevel - 1 : 0
                 self.goBackToMainViewLevel(mainViewLevel: nextMainViewLevel)
             }
         }
@@ -100,33 +103,33 @@ struct SolitaryMainView: View {
             self.loadEverything()
         }) {
             SettingsView(isPresented: self.$showingSettingsView,
-                         userSettings: self.$userSettings,
-                         tags: self.$imageTags,
+                         userSettings: self.$solitaryViewModel.userSettings,
+                         tags: self.$solitaryViewModel.tagString,
                          settingsChanged: self.$settingsChanged)
         }
     }
 
     private func trailingNavigationItem() -> some View {
-        Button(getRightButtonText()) {
-            if self.getRightButtonText() == self.pickTagsButtonText {
+        Button(solitaryViewModel.rightButtonText) {
+            if self.solitaryViewModel.isRightButtonPickTags {
                 self.nextImageTags = ""
                 self.showingSelectorView = true
-            } else if self.getRightButtonText() == self.startButtonText {
+            } else {
                 self.goBackToMainViewLevel(mainViewLevel: 0)
             }
         }
         .sheet(isPresented: $showingSelectorView, onDismiss: {
             if !self.nextImageTags.isEmpty {
-                self.dataManager.saveResults(index: self.mainViewLevel, tagsString: self.imageTags)
-                self.imageTags = self.nextImageTags
-                self.mainViewLevel += 1
+                self.solitaryViewModel.saveResults(index: self.solitaryViewModel.mainViewLevel)
+                self.solitaryViewModel.tagString = self.nextImageTags
+                self.solitaryViewModel.mainViewLevel += 1
                 self.settingsChanged = true
                 self.loadEverything()
             }
         }) {
             SelectorView(isPresented: self.$showingSelectorView,
                          selectedStrings: self.$nextImageTags,
-                         allStrings: self.dataManager.tagsArray)
+                         allStrings: self.solitaryViewModel.tagsArray)
         }
     }
 
@@ -140,33 +143,32 @@ struct SolitaryMainView: View {
 
         //clear and then reloadData with empty in case populateDataSource fails -
         //if it fails completely it won't call any of the completion callbacks.
-        dataManager.clearDataSource()
-        imageModels = dataManager.imageModels
+//        solitaryViewModel.clearDataSource()
+//        imageModels = solitaryViewModel.imageModels
 
         //need a delay so that screen can completely refresh after imageModels was reset
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
+        //adjust the delay for best UX ... too short and the screen doesn't completely refresh
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+//            self.getImageModels()
+//        }
+//        DispatchQueue.global(qos: .default).asyncAfter(deadline: .now() + 0.5) {
             self.getImageModels()
-        }
+//        }
     }
 
     private func goBackToMainViewLevel(mainViewLevel: Int) {
-        self.mainViewLevel = mainViewLevel
+        self.solitaryViewModel.mainViewLevel = mainViewLevel
 
-        dataManager.clearDataSource()
-        imageModels = dataManager.imageModels
-        dataManager.getResults(index: mainViewLevel)
-        imageTags = dataManager.tagString
+        solitaryViewModel.clearDataSource()
+        imageModels = solitaryViewModel.imageModels
+        solitaryViewModel.getResults(index: mainViewLevel)
+//        imageTags = solitaryViewModel.tagString
 
-        DispatchQueue.main.async {
-            self.imageModels = self.dataManager.imageModels
-        }
+        self.imageModels = self.solitaryViewModel.imageModels
     }
 
     private func getImageModels() {
-        let urlString = userSettings.getFullUrlString(tags: imageTags)
-        self.dataManager.populateDataSource(urlString: urlString,
-                                            useRxSwift: userSettings.useRxSwift,
-                                            networkingType: userSettings.networkingType) { referenceError in
+        solitaryViewModel.populateDataSource(imageTags: solitaryViewModel.tagString) { referenceError in
             if let referenceError = referenceError {
                 //handle error
                 print("\(referenceError)")
@@ -175,38 +177,56 @@ struct SolitaryMainView: View {
                 return
             }
 
-            self.imageModels = self.dataManager.imageModels
+//            self.imageModels = self.solitaryViewModel.imageModels
+//            DispatchQueue.main.async {
+                self.imageModels = self.solitaryViewModel.imageModels
+//            }
         }
+//        let urlString = solitaryViewModel.userSettings.getFullUrlString(tags: imageTags)
+//        self.solitaryViewModel.dataManager.populateDataSource(urlString: urlString,
+//                                            useRxSwift: userSettings.useRxSwift,
+//                                            networkingType: userSettings.networkingType) { referenceError in
+//            if let referenceError = referenceError {
+//                //handle error
+//                print("\(referenceError)")
+//                self.alertMessageString = referenceError.errorDescription
+//                self.showingAlert = true
+//                return
+//            }
+//
+//            self.imageModels = self.solitaryViewModel.dataManager.imageModels
+//        }
     }
 
-    private func getTitle() -> String {
-        if mainViewLevel == 0 {
-            return "Starting Images"
-        } else {
-            return imageTags
-        }
-    }
-
-    private func getBackButtonText() -> String {
-        if mainViewLevel == 0 {
-            return settingsButtonText
-        } else {
-            return dataManager.getLastTagsString(index: mainViewLevel - 1)
-        }
-    }
-
-    private func getRightButtonText() -> String {
-        if mainViewLevel < userSettings.maxNumberOfLevels {
-            return pickTagsButtonText
-        } else {
-            return startButtonText
-        }
-    }
+//    private func getTitle() -> String {
+//        if mainViewLevel == 0 {
+//            return "Starting Images"
+//        } else {
+//            return imageTags
+//        }
+//    }
+//
+//    private func getBackButtonText() -> String {
+//        if mainViewLevel == 0 {
+//            return settingsButtonText
+//        } else {
+//            return solitaryViewModel.dataManager.getLastTagsString(index: mainViewLevel - 1)
+//        }
+//    }
+//
+//    private func getRightButtonText() -> String {
+//        if mainViewLevel < userSettings.maxNumberOfLevels {
+//            return pickTagsButtonText
+//        } else {
+//            return startButtonText
+//        }
+//    }
 }
 
 struct SolitaryMainView_Previews: PreviewProvider {
     static var previews: some View {
-        let userSettings = UserDefaultsManager.getUserSettings()
-        return SolitaryMainView(userSettings: userSettings, mainViewLevel: 0, imageTags: userSettings.initialTags)
+//        let userSettings = UserDefaultsManager.getUserSettings()
+//        return SolitaryMainView(userSettings: userSettings, mainViewLevel: 0, imageTags: userSettings.initialTags)
+        return SolitaryMainView()
     }
 }

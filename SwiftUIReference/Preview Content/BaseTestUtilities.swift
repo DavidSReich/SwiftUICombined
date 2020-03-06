@@ -118,6 +118,69 @@ class BaseTestUtilities {
         """
     }
 
+    static private let basicFishImageJSONString =
+    #"""
+        {
+            "height": "240",
+            "url": "{FISH_URL}",
+            "width": "550"
+        }
+    """#
+
+    static private func fishImageJSONString() -> String {
+        if let url = Bundle.main.url(forResource: "fish", withExtension: "gif") {
+            return basicFishImageJSONString.replacingOccurrences(of: "{FISH_URL}", with: url.absoluteString)
+        }
+
+        return ""
+    }
+
+    static private func fishImagesModelString() -> String {
+        return """
+            {
+                "original": \(fishImageJSONString()),
+                "fixed_width": \(fishImageJSONString())
+            }
+        """
+    }
+
+    static private func fishImageDataModelString() -> String {
+        return """
+            {
+                "title": "This is the title",
+                "slug": "abc-efg-hij-klm",
+                "images": \(fishImagesModelString())
+            }
+        """
+    }
+
+    static private func fishGiphyModelString() -> String {
+        return """
+            {
+                "meta" : {
+                  "status" : 200,
+                  "msg" : "OK"
+                },
+                "data":
+                    [{
+                        "title": "This is the title1",
+                        "slug": "abc-efg-hij-klm",
+                        "images": \(fishImagesModelString())
+                    },
+                    {
+                        "title": "This is the title2",
+                        "slug": "abc-efg-hij-klm",
+                        "images": \(fishImagesModelString())
+                    },
+                    {
+                        "title": "This is the title3",
+                        "slug": "abc-efg-hij-klm",
+                        "images": \(fishImagesModelString())
+                    }]
+            }
+        """
+    }
+
     class func getBasicImageData() -> Data {
         return Data(basicImageJSONString.utf8)
     }
@@ -135,7 +198,8 @@ class BaseTestUtilities {
     }
 
     class func getImageDataModelData() -> Data {
-        return Data(imageDataModelString().utf8)
+        return Data(fishImageDataModelString().utf8)
+//        return Data(imageDataModelString().utf8)
     }
 
     class func getGiphyModelData() -> Data {

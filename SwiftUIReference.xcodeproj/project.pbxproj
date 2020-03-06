@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		51018A54A5569F6FA6C41784 /* Pods_SwiftUIReferenceTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54470DDECDB710F01287B5BA /* Pods_SwiftUIReferenceTests.framework */; };
 		5B410C090D62EB9ADB2507EB /* Pods_SwiftUIReference.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3343D13A22FB0C138D12433 /* Pods_SwiftUIReference.framework */; };
+		633BB0D9240E4D580073BE7E /* fish.gif in Resources */ = {isa = PBXBuildFile; fileRef = 633BB0D8240E4D570073BE7E /* fish.gif */; };
+		63DA6493240F8DFA0034AD55 /* SolitaryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DA6492240F8DFA0034AD55 /* SolitaryViewModel.swift */; };
 		7F00740A23AB45E200901C30 /* PlainMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F00740923AB45E200901C30 /* PlainMainView.swift */; };
 		7F0EED4F23DD6970001FE055 /* HTTPUrlResponse+ValidateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F0EED4E23DD6970001FE055 /* HTTPUrlResponse+ValidateTests.swift */; };
 		7F2668B723A8758900FA8A7C /* SelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F2668B623A8758900FA8A7C /* SelectorView.swift */; };
@@ -91,6 +93,8 @@
 		4AB4AE3F9C0ACDA06E027E8D /* Pods-SwiftUIReferenceTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftUIReferenceTests.debug.xcconfig"; path = "Target Support Files/Pods-SwiftUIReferenceTests/Pods-SwiftUIReferenceTests.debug.xcconfig"; sourceTree = "<group>"; };
 		54470DDECDB710F01287B5BA /* Pods_SwiftUIReferenceTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwiftUIReferenceTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		57E1B97A93D29AA7F82B2487 /* Pods-SwiftUIReferenceTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftUIReferenceTests.release.xcconfig"; path = "Target Support Files/Pods-SwiftUIReferenceTests/Pods-SwiftUIReferenceTests.release.xcconfig"; sourceTree = "<group>"; };
+		633BB0D8240E4D570073BE7E /* fish.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = fish.gif; sourceTree = "<group>"; };
+		63DA6492240F8DFA0034AD55 /* SolitaryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolitaryViewModel.swift; sourceTree = "<group>"; };
 		7F00740923AB45E200901C30 /* PlainMainView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlainMainView.swift; sourceTree = "<group>"; };
 		7F0EED4E23DD6970001FE055 /* HTTPUrlResponse+ValidateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HTTPUrlResponse+ValidateTests.swift"; sourceTree = "<group>"; };
 		7F2668B623A8758900FA8A7C /* SelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectorView.swift; sourceTree = "<group>"; };
@@ -293,6 +297,7 @@
 				7F92453B23C54CEA006EACF3 /* Settings */,
 				7FF70968239CF0C10077688C /* Supporting Filles */,
 				7F7D6EC7239F6FA90036E443 /* Views */,
+				63DA6492240F8DFA0034AD55 /* SolitaryViewModel.swift */,
 			);
 			path = SwiftUIReference;
 			sourceTree = "<group>";
@@ -345,6 +350,7 @@
 		7FF70968239CF0C10077688C /* Supporting Filles */ = {
 			isa = PBXGroup;
 			children = (
+				633BB0D8240E4D570073BE7E /* fish.gif */,
 				7FF70934239CE1540077688C /* AppDelegate.swift */,
 				7FF7093D239CE1560077688C /* Assets.xcassets */,
 				7FF70936239CE1540077688C /* SceneDelegate.swift */,
@@ -472,6 +478,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7FF70941239CE1560077688C /* Preview Assets.xcassets in Resources */,
+				633BB0D9240E4D580073BE7E /* fish.gif in Resources */,
 				7FF7093E239CE1560077688C /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -599,6 +606,7 @@
 				7FF1060223E9291B00354D30 /* BaseTestUtilities.swift in Sources */,
 				7FE2EDD9239E229A0079A508 /* DataManager.swift in Sources */,
 				7F8C619023BF1AA5002BD830 /* MetaModel.swift in Sources */,
+				63DA6493240F8DFA0034AD55 /* SolitaryViewModel.swift in Sources */,
 				7F751C3223A05C7D00DBB44F /* ImageRowView.swift in Sources */,
 				7F7453ED23D481F600300BEC /* GifView.swift in Sources */,
 				7F6957F223C1B3C300574E11 /* Data+Decode.swift in Sources */,

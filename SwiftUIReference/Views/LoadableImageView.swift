@@ -32,8 +32,8 @@ struct LoadableImageView: View {
     }
 }
 
-//struct LoadableImageView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        LoadableImageView(withURL: "https://media0.giphy.com/media/10N782ExqDjCLK/giphy.gif")
-//    }
-//}
+struct LoadableImageView_Previews: PreviewProvider {
+    static var previews: some View {
+        LoadableImageView(withURL: "https://media0.giphy.com/media/10N782ExqDjCLK/giphy.gif")
+    }
+}

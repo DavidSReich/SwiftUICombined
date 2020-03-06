@@ -20,7 +20,8 @@ struct StarterView: View {
                 LaunchScreenView(isPresented: $showLaunchScreen)
             } else {
 //                PlainMainView(userSettings: userSettings, mainViewLevel: 0, imageTags: userSettings.initialTags)
-                SolitaryMainView(userSettings: userSettings, mainViewLevel: 0, imageTags: userSettings.initialTags)
+//                SolitaryMainView(userSettings: userSettings, mainViewLevel: 0, imageTags: userSettings.initialTags)
+                SolitaryMainView()
             }
         }
     }
