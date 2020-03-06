@@ -9,9 +9,7 @@
 import Foundation
 
 class ResultsStack {
-    //use a dictionary so we don't have to worry about saving the same set multiple times.
-    //the dictionary key is the mainViewLevel, so we have a 1:1 mapping.
-    private var resultsStack = [Int: ResultBox]()
+    private var resultsStack = [ResultBox]()
 
     struct ResultBox {
         //for title
@@ -19,14 +17,20 @@ class ResultsStack {
         var images: [ImageDataModelProtocolWrapper]
     }
 
-    func saveResults(index: Int, tagsString: String, images: [ImageDataModelProtocolWrapper]) {
-        let resultBox = ResultBox(tagString: tagsString, images: images)
-
-        resultsStack[index] = resultBox
+    func pushResults(tagsString: String, images: [ImageDataModelProtocolWrapper]) {
+        resultsStack.append(ResultBox(tagString: tagsString, images: images))
     }
 
-    func getResults(index: Int) -> (tagsString: String, images: [ImageDataModelProtocolWrapper])? {
-        if let resultBox = resultsStack[index] {
+    func popResults() -> (tagsString: String, images: [ImageDataModelProtocolWrapper])? {
+        if let resultBox = resultsStack.popLast() {
+            return (resultBox.tagString, resultBox.images)
+        }
+
+        return nil
+    }
+
+    func getLast() -> (tagsString: String, images: [ImageDataModelProtocolWrapper])? {
+        if let resultBox = resultsStack.last {
             return (resultBox.tagString, resultBox.images)
         }
 

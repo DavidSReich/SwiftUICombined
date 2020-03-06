@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import SwiftUI
+//import SwiftUI
 
 class SolitaryViewModel {
 
@@ -18,7 +18,6 @@ class SolitaryViewModel {
     private var dataManager: DataManagerProtocol
 //    var dataManager: DataManagerProtocol
 //    private var userSettings: UserSettings
-//    @ObservedObject var userSettings: UserSettings
     var userSettings: UserSettings
 
     private var viewLevel: Int = 0
@@ -67,7 +66,7 @@ class SolitaryViewModel {
     }
 
     var backButtonText: String {
-        isBackButtonSettings ? settingsButtonText : dataManager.getLastTagsString(index: mainViewLevel - 1)
+        isBackButtonSettings ? settingsButtonText : dataManager.lastTagsString
     }
 
     var rightButtonText: String {
@@ -83,12 +82,15 @@ class SolitaryViewModel {
         dataManager.tagsArray
     }
 
-    func saveResults(index: Int) {
-        dataManager.saveResults(index: index, tagsString: imageTags)
+    func saveResults(nextImageTags: String) {
+        dataManager.pushResults(tagsString: imageTags)
+        tagString = nextImageTags
+        mainViewLevel += 1
     }
 
-    func getResults(index: Int) {
-        dataManager.getResults(index: index)
+    func goBackOneLevel() {
+        mainViewLevel = mainViewLevel > 1 ? mainViewLevel - 1 : 0
+        dataManager.popResults()
         imageTags = dataManager.tagString
     }
 

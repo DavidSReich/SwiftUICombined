@@ -13,7 +13,7 @@ protocol HandleReferenceErrorProtocol {
     func handleReferenceError(referenceError: ReferenceError)
 }
 
-protocol DataManagerProtocol: ResultDictProtocol {
+protocol DataManagerProtocol: ResultStackProtocol {
     var imageModels: [ImageDataModelProtocolWrapper] { get }
     var tagsArray: [String] { get }
     func clearDataSource()
@@ -23,10 +23,10 @@ protocol DataManagerProtocol: ResultDictProtocol {
                             completion: @escaping (_ referenceError: ReferenceError?) -> Void)
 }
 
-protocol ResultDictProtocol {
-    func saveResults(index: Int, tagsString: String)
-    func getResults(index: Int)
-    func getLastTagsString(index: Int) -> String
+protocol ResultStackProtocol {
+    func pushResults(tagsString: String)
+    func popResults()
+    var lastTagsString: String { get }
     var tagString: String { get }
 }
 
@@ -148,20 +148,20 @@ extension DataManager: DataManagerProtocol {
     }
 }
 
-extension DataManager: ResultDictProtocol {
-    func saveResults(index: Int, tagsString: String) {
-        resultsStack.saveResults(index: index, tagsString: tagsString, images: imageDataSource.images)
+extension DataManager: ResultStackProtocol {
+    func pushResults(tagsString: String) {
+        resultsStack.pushResults(tagsString: tagsString, images: imageDataSource.images)
     }
 
-    func getResults(index: Int) {
-        if let results = resultsStack.getResults(index: index) {
+    func popResults() {
+        if let results = resultsStack.popResults() {
             currentTagString = results.tagsString
             imageDataSource = ImageDataSource(with: results.images)
         }
     }
 
-    func getLastTagsString(index: Int) -> String {
-        return resultsStack.getResults(index: index)?.tagsString ?? ""
+    var lastTagsString: String {
+        return resultsStack.getLast()?.tagsString ?? ""
     }
 
     var tagString: String {

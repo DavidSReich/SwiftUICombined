@@ -8,42 +8,13 @@
 
 import Foundation
 
-class UserSettings: ObservableObject {
+struct UserSettings: Equatable {
     var initialTags: String
     var giphyAPIKey: String
     var maxNumberOfImages: Int
     var maxNumberOfLevels: Int
     var useRxSwift: Bool
     var networkingType: NetworkingType
-
-    init(initialTags: String,
-         giphyAPIKey: String,
-         maxNumberOfImages: Int,
-         maxNumberOfLevels: Int,
-         useRxSwift: Bool,
-         networkingType: NetworkingType) {
-        self.initialTags = initialTags
-        self.giphyAPIKey = giphyAPIKey
-        self.maxNumberOfImages = maxNumberOfImages
-        self.maxNumberOfLevels = maxNumberOfLevels
-        self.useRxSwift = useRxSwift
-        self.networkingType = networkingType
-    }
-}
-
-extension UserSettings: Equatable {
-    static func == (lhs: UserSettings, rhs: UserSettings) -> Bool {
-        if lhs.initialTags != rhs.initialTags ||
-            lhs.giphyAPIKey != rhs.giphyAPIKey ||
-            lhs.maxNumberOfImages != rhs.maxNumberOfImages ||
-            lhs.maxNumberOfLevels != rhs.maxNumberOfLevels ||
-            lhs.useRxSwift != rhs.useRxSwift ||
-            lhs.networkingType != rhs.networkingType {
-            return false
-        }
-
-        return true
-    }
 }
 
 extension UserSettings {

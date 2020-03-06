@@ -120,9 +120,9 @@ struct SolitaryMainView: View {
         }
         .sheet(isPresented: $showingSelectorView, onDismiss: {
             if !self.nextImageTags.isEmpty {
-                self.solitaryViewModel.saveResults(index: self.solitaryViewModel.mainViewLevel)
-                self.solitaryViewModel.tagString = self.nextImageTags
-                self.solitaryViewModel.mainViewLevel += 1
+                self.solitaryViewModel.saveResults(nextImageTags: self.nextImageTags)
+//                self.solitaryViewModel.tagString = self.nextImageTags
+//                self.solitaryViewModel.mainViewLevel += 1
                 self.settingsChanged = true
                 self.loadEverything()
             }
@@ -157,13 +157,14 @@ struct SolitaryMainView: View {
     }
 
     private func goBackToMainViewLevel(mainViewLevel: Int) {
-        self.solitaryViewModel.mainViewLevel = mainViewLevel
+//        self.solitaryViewModel.mainViewLevel = mainViewLevel
 
-        solitaryViewModel.clearDataSource()
-        imageModels = solitaryViewModel.imageModels
-        solitaryViewModel.getResults(index: mainViewLevel)
+//        solitaryViewModel.clearDataSource()
+//        imageModels = solitaryViewModel.imageModels
+//        solitaryViewModel.getResults(index: mainViewLevel)
 //        imageTags = solitaryViewModel.tagString
 
+        solitaryViewModel.goBackOneLevel()
         self.imageModels = self.solitaryViewModel.imageModels
     }
 
