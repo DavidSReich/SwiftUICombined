@@ -7,7 +7,6 @@
 //
 
 import Foundation
-//import SwiftUI
 
 class SolitaryViewModel {
 
@@ -16,8 +15,6 @@ class SolitaryViewModel {
     private let startButtonText = "Start"
 
     private var dataManager: DataManagerProtocol
-//    var dataManager: DataManagerProtocol
-//    private var userSettings: UserSettings
     var userSettings: UserSettings
 
     private var viewLevel: Int = 0
@@ -94,11 +91,11 @@ class SolitaryViewModel {
         imageTags = dataManager.tagString
     }
 
-//    func getLastTagsString(index: Int) -> String
-
-//    var tagString: String {
-//        dataManager.tagString
-//    }
+    func goBackToTop() {
+        mainViewLevel = 0
+        dataManager.popToTop()
+        imageTags = dataManager.tagString
+    }
 
     func clearDataSource() {
         dataManager.clearDataSource()

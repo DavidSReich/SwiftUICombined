@@ -26,6 +26,7 @@ protocol DataManagerProtocol: ResultStackProtocol {
 protocol ResultStackProtocol {
     func pushResults(tagsString: String)
     func popResults()
+    func popToTop()
     var lastTagsString: String { get }
     var tagString: String { get }
 }
@@ -155,6 +156,13 @@ extension DataManager: ResultStackProtocol {
 
     func popResults() {
         if let results = resultsStack.popResults() {
+            currentTagString = results.tagsString
+            imageDataSource = ImageDataSource(with: results.images)
+        }
+    }
+
+    func popToTop() {
+        if let results = resultsStack.popToTop() {
             currentTagString = results.tagsString
             imageDataSource = ImageDataSource(with: results.images)
         }

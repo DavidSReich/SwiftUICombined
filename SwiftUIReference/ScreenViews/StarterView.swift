@@ -13,6 +13,8 @@ struct StarterView: View {
 
     // get defaults
     let userSettings = UserDefaultsManager.getUserSettings()
+    let solitaryViewModel = SolitaryViewModel(dataManager: DataManager(),
+                                                             userSettings: UserDefaultsManager.getUserSettings())
 
     var body: some View {
         Group {
@@ -21,7 +23,7 @@ struct StarterView: View {
             } else {
 //                PlainMainView(userSettings: userSettings, mainViewLevel: 0, imageTags: userSettings.initialTags)
 //                SolitaryMainView(userSettings: userSettings, mainViewLevel: 0, imageTags: userSettings.initialTags)
-                SolitaryMainView()
+                SolitaryMainView(solitaryViewModel: solitaryViewModel)
             }
         }
     }

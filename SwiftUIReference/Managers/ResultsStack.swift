@@ -11,7 +11,7 @@ import Foundation
 class ResultsStack {
     private var resultsStack = [ResultBox]()
 
-    struct ResultBox {
+    private struct ResultBox {
         //for title
         var tagString: String
         var images: [ImageDataModelProtocolWrapper]
@@ -35,5 +35,14 @@ class ResultsStack {
         }
 
         return nil
+    }
+
+    func popToTop() -> (tagsString: String, images: [ImageDataModelProtocolWrapper])? {
+        guard resultsStack.count > 0 else {
+            return nil
+        }
+        resultsStack.removeLast(resultsStack.count - 1)
+
+        return getLast()
     }
 }
