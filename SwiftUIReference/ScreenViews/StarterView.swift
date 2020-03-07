@@ -12,9 +12,8 @@ struct StarterView: View {
     @State private var showLaunchScreen = true
 
     // get defaults
-    let userSettings = UserDefaultsManager.getUserSettings()
-    let solitaryViewModel = SolitaryViewModel(dataManager: DataManager(),
-                                                             userSettings: UserDefaultsManager.getUserSettings())
+//    let userSettings = UserDefaultsManager.getUserSettings()
+    let solitaryViewModel = SolitaryViewModel(dataManager: DataManager(), userSettings: UserDefaultsManager.getUserSettings())
 
     var body: some View {
         Group {
