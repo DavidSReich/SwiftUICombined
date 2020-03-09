@@ -11,9 +11,6 @@ import SwiftUI
 struct StarterView: View {
     @State private var showLaunchScreen = true
 
-    // get defaults
-//    let userSettings = UserDefaultsManager.getUserSettings()
-//    let solitaryViewModel = SolitaryViewModel(dataManager: DataManager(), userSettings: UserDefaultsManager.getUserSettings())
     let solitaryViewModel = SolitaryViewModel(dataSource: DataSource(networkService: NetworkService()),
                                               userSettings: UserDefaultsManager.getUserSettings())
 
@@ -22,8 +19,6 @@ struct StarterView: View {
             if showLaunchScreen {
                 LaunchScreenView(isPresented: $showLaunchScreen)
             } else {
-//                PlainMainView(userSettings: userSettings, mainViewLevel: 0, imageTags: userSettings.initialTags)
-//                SolitaryMainView(userSettings: userSettings, mainViewLevel: 0, imageTags: userSettings.initialTags)
                 SolitaryMainView(solitaryViewModel: solitaryViewModel)
             }
         }

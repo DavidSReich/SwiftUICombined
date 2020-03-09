@@ -168,7 +168,7 @@ struct SolitaryMainView: View {
 
 struct SolitaryMainView_Previews: PreviewProvider {
     static var previews: some View {
-        let solitaryViewModel = SolitaryViewModel(dataSource: DataSource(networkService: NetworkService()),
+        let solitaryViewModel = SolitaryViewModel(dataSource: DataSource(networkService: MockNetworkService()),
                                                   userSettings: UserDefaultsManager.getUserSettings())
 
         return SolitaryMainView(solitaryViewModel: solitaryViewModel)

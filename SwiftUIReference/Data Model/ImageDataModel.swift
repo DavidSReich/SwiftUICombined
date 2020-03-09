@@ -34,7 +34,6 @@ struct ImageDataModelProtocolWrapper: Comparable, Identifiable {
     var showOnLeft: Bool
 }
 
-//has to be class and not struct because of "lazy var tagsArray"
 class ImageDataModel: Decodable {
     private var title: String?
     private var slug: String
@@ -52,8 +51,6 @@ class ImageDataModel: Decodable {
         let allItems = giphyModel.data
 
         for fullItem in allItems {
-//            print("fullitem: \(fullItem)")
-
             //alternate left and right
             imageModels.append(ImageDataModelProtocolWrapper(imageModel: fullItem, showOnLeft: imageModels.count.isMultiple(of: 2)))
         }

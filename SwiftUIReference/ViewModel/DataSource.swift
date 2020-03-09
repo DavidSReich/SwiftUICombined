@@ -9,7 +9,7 @@
 import Foundation
 
 class DataSource {
-    let networkService: NetworkService
+    private let networkService: NetworkService
 
     private var resultsStack = ResultsStack<ImageDataModelProtocolWrapper>()
 

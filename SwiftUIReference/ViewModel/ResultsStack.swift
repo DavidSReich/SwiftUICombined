@@ -27,7 +27,6 @@ class ResultsStack<T> {
 
     func pushResults(title: String, values: [T]) {
         resultsStack.append(ResultBox(title: title, values: values))
-//        print(">>>>>> \(title) :: \(resultsStack.count) :: \(values.count)")
     }
 
     func popResults() -> (title: String, values: [T])? {

@@ -61,14 +61,3 @@ class DataSourceTests: XCTestCase {
         XCTAssertEqual("data1", dataSource.penultimateTitle)
     }
 }
-
-class MockNetworkService: NetworkService {
-    override func getData(urlString: String,
-                          useRxSwift: Bool,
-                          mimeType: String,
-                          networkingType: UserSettings.NetworkingType,
-                          not200Handler: HTTPURLResponseNot200? = nil,
-                          completion: @escaping (DataResult) -> Void) {
-        completion(.success(BaseTestUtilities.getGiphyModelData()))
-    }
-}

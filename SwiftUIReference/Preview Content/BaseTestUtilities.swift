@@ -209,6 +209,10 @@ class BaseTestUtilities {
         return Data(giphyModelString().utf8)
     }
 
+    class func getFishGiphyModelData() -> Data {
+        return Data(fishGiphyModelString().utf8)
+    }
+
     class func getFishImageModel() -> ImageDataModel? {
         let jsonData = BaseTestUtilities.getFishImageDataModelData()
         let result: Result<ImageDataModel, ReferenceError> = jsonData.decodeData()
@@ -219,5 +223,16 @@ class BaseTestUtilities {
         }
 
         return nil
+    }
+}
+
+class MockNetworkService: NetworkService {
+    override func getData(urlString: String,
+                          useRxSwift: Bool,
+                          mimeType: String,
+                          networkingType: UserSettings.NetworkingType,
+                          not200Handler: HTTPURLResponseNot200? = nil,
+                          completion: @escaping (DataResult) -> Void) {
+        completion(.success(BaseTestUtilities.getFishGiphyModelData()))
     }
 }
