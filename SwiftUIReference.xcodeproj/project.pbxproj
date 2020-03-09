@@ -82,13 +82,6 @@
 			remoteGlobalIDString = 7FF70930239CE1540077688C;
 			remoteInfo = SwiftUIReference;
 		};
-		7FF70956239CE1560077688C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 7FF70929239CE1540077688C /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 7FF70930239CE1540077688C;
-			remoteInfo = SwiftUIReference;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -144,7 +137,6 @@
 		7FF70945239CE1560077688C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7FF7094A239CE1560077688C /* SwiftUIReferenceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftUIReferenceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7FF70950239CE1560077688C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		7FF70955239CE1560077688C /* SwiftUIReferenceUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftUIReferenceUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		90E84BBF4A87EB646B7CDD61 /* Pods-SwiftUIReference.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftUIReference.debug.xcconfig"; path = "Target Support Files/Pods-SwiftUIReference/Pods-SwiftUIReference.debug.xcconfig"; sourceTree = "<group>"; };
 		B3343D13A22FB0C138D12433 /* Pods_SwiftUIReference.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwiftUIReference.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9068D7DF97879B16B1646F3 /* Pods-SwiftUIReference.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftUIReference.release.xcconfig"; path = "Target Support Files/Pods-SwiftUIReference/Pods-SwiftUIReference.release.xcconfig"; sourceTree = "<group>"; };
@@ -164,13 +156,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				51018A54A5569F6FA6C41784 /* Pods_SwiftUIReferenceTests.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		7FF70952239CE1560077688C /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -279,7 +264,6 @@
 			children = (
 				7FF70931239CE1540077688C /* SwiftUIReference.app */,
 				7FF7094A239CE1560077688C /* SwiftUIReferenceTests.xctest */,
-				7FF70955239CE1560077688C /* SwiftUIReferenceUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -401,24 +385,6 @@
 			productReference = 7FF7094A239CE1560077688C /* SwiftUIReferenceTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		7FF70954239CE1560077688C /* SwiftUIReferenceUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 7FF70964239CE1560077688C /* Build configuration list for PBXNativeTarget "SwiftUIReferenceUITests" */;
-			buildPhases = (
-				7FF70951239CE1560077688C /* Sources */,
-				7FF70952239CE1560077688C /* Frameworks */,
-				7FF70953239CE1560077688C /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				7FF70957239CE1560077688C /* PBXTargetDependency */,
-			);
-			name = SwiftUIReferenceUITests;
-			productName = SwiftUIReferenceUITests;
-			productReference = 7FF70955239CE1560077688C /* SwiftUIReferenceUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -433,10 +399,6 @@
 						CreatedOnToolsVersion = 11.3;
 					};
 					7FF70949239CE1560077688C = {
-						CreatedOnToolsVersion = 11.3;
-						TestTargetID = 7FF70930239CE1540077688C;
-					};
-					7FF70954239CE1560077688C = {
 						CreatedOnToolsVersion = 11.3;
 						TestTargetID = 7FF70930239CE1540077688C;
 					};
@@ -457,7 +419,6 @@
 			targets = (
 				7FF70930239CE1540077688C /* SwiftUIReference */,
 				7FF70949239CE1560077688C /* SwiftUIReferenceTests */,
-				7FF70954239CE1560077688C /* SwiftUIReferenceUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -474,13 +435,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		7FF70948239CE1560077688C /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		7FF70953239CE1560077688C /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -645,13 +599,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		7FF70951239CE1560077688C /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -659,11 +606,6 @@
 			isa = PBXTargetDependency;
 			target = 7FF70930239CE1540077688C /* SwiftUIReference */;
 			targetProxy = 7FF7094B239CE1560077688C /* PBXContainerItemProxy */;
-		};
-		7FF70957239CE1560077688C /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 7FF70930239CE1540077688C /* SwiftUIReference */;
-			targetProxy = 7FF70956239CE1560077688C /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -872,46 +814,6 @@
 			};
 			name = Release;
 		};
-		7FF70965239CE1560077688C /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = U87YK43XJ5;
-				INFOPLIST_FILE = SwiftUIReferenceUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = stellarsoftware.com.SwiftUIReferenceUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = SwiftUIReference;
-			};
-			name = Debug;
-		};
-		7FF70966239CE1560077688C /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = U87YK43XJ5;
-				INFOPLIST_FILE = SwiftUIReferenceUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = stellarsoftware.com.SwiftUIReferenceUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = SwiftUIReference;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -938,15 +840,6 @@
 			buildConfigurations = (
 				7FF70962239CE1560077688C /* Debug */,
 				7FF70963239CE1560077688C /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		7FF70964239CE1560077688C /* Build configuration list for PBXNativeTarget "SwiftUIReferenceUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				7FF70965239CE1560077688C /* Debug */,
-				7FF70966239CE1560077688C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

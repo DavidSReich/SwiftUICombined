@@ -52,8 +52,8 @@ class DataSourceTests: XCTestCase {
         XCTAssertNotNil(dataSource.currentResults)
         XCTAssertNotNil(dataSource.currentResults?[0])
 
-        XCTAssertEqual(BaseTestUtilities.height, dataSource.currentResults?[0].imageModel.imageSize.height)
-        XCTAssertEqual(BaseTestUtilities.width, dataSource.currentResults?[0].imageModel.imageSize.width)
+        XCTAssertEqual(240.0, dataSource.currentResults?[0].imageModel.imageSize.height)
+        XCTAssertEqual(550.0, dataSource.currentResults?[0].imageModel.imageSize.width)
 
         _ = dataSource.popResults()
         XCTAssertEqual(2, dataSource.resultsDepth)
