@@ -9,22 +9,25 @@
 import Foundation
 import RxSwift
 
-struct NetworkService {
+class NetworkService {
     private let disposeBag = DisposeBag()
 
     func getData(urlString: String,
                  useRxSwift: Bool,
+                 mimeType: String,
                  networkingType: UserSettings.NetworkingType,
                  not200Handler: HTTPURLResponseNot200? = nil,
                  completion: @escaping (DataResult) -> Void) {
 
         if useRxSwift {
             getDataWithRxSwift(urlString: urlString,
+                               mimeType: mimeType,
                                networkingType: networkingType,
                                not200Handler: not200Handler,
                                completion: completion)
         } else {
             getDataWithoutRxSwift(urlString: urlString,
+                                  mimeType: mimeType,
                                   networkingType: networkingType,
                                   not200Handler: not200Handler,
                                   completion: completion)
@@ -32,10 +35,12 @@ struct NetworkService {
     }
 
     private func getDataWithoutRxSwift(urlString: String,
+                                       mimeType: String,
                                        networkingType: UserSettings.NetworkingType,
                                        not200Handler: HTTPURLResponseNot200? = nil,
                                        completion: @escaping (DataResult) -> Void) {
-        let referenceError = JSONNetworkService.getJSON(urlString: urlString,
+        let referenceError = SessionService.getData(urlString: urlString,
+                                                        mimeType: mimeType,
                                                         networkingType: networkingType,
                                                         not200Handler: not200Handler,
                                                         completion: completion)
@@ -46,10 +51,12 @@ struct NetworkService {
     }
 
     private func getDataWithRxSwift(urlString: String,
+                                    mimeType: String,
                                     networkingType: UserSettings.NetworkingType,
                                     not200Handler: HTTPURLResponseNot200? = nil,
                                     completion: @escaping (DataResult) -> Void) {
-        guard let jsonObservable = JSONNetworkService.getJSONObservable(urlString: urlString,
+        guard let jsonObservable = SessionService.getDataObservable(urlString: urlString,
+                                                                        mimeType: mimeType,
                                                                         networkingType: networkingType,
                                                                         not200Handler: not200Handler) else {
                                                                             completion(.failure(.badURL))

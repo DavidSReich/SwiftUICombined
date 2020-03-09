@@ -20,10 +20,12 @@ class DataSource {
     func getData(tagString: String,
                  urlString: String,
                  useRxSwift: Bool,
+                 mimeType: String,
                  networkingType: UserSettings.NetworkingType,
                  completion: @escaping (_ referenceError: ReferenceError?) -> Void) {
         networkService.getData(urlString: urlString,
                                useRxSwift: useRxSwift,
+                               mimeType: mimeType,
                                networkingType: networkingType,
                                not200Handler: self) { result in
             switch result {

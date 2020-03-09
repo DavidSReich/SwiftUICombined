@@ -95,6 +95,7 @@ class SolitaryViewModel {
         dataSource.getData(tagString: imageTags,
                            urlString: urlString,
                            useRxSwift: userSettings.useRxSwift,
+                           mimeType: "application/json",
                            networkingType: userSettings.networkingType,
                            completion: completion)
     }

@@ -1,5 +1,5 @@
 //
-//  JSONNetworkService.swift
+//  SessionService.swift
 //  GIPHYTags
 //
 //  Created by David S Reich on 9/12/19.
@@ -13,12 +13,13 @@ import Alamofire
 // This is overly complicated
 // but it is this way to illustrate all 4 combinations of RxSwift|NoRxSwift and UrlSession|Alamofire
 
-//TODO - rename this to "SessionService" -- and use "Data" instead of "JSON" in all names, etc.
-class JSONNetworkService {
+// This might NOT be thread-safe or re-entrant?
+class SessionService {
 
     typealias ObservableData = Observable<DataResult>
 
-    class func getJSON(urlString: String,
+    class func getData(urlString: String,
+                       mimeType: String,
                        networkingType: UserSettings.NetworkingType,
                        not200Handler: HTTPURLResponseNot200? = nil,
                        completion: @escaping (DataResult) -> Void) -> ReferenceError? {
@@ -30,12 +31,12 @@ class JSONNetworkService {
 
         if networkingType == .alamoFire {
             _ = SessionManager.sessionManagerDataTask(urlString: urlString,
-                                                      mimeType: "application/json",
+                                                      mimeType: mimeType,
                                                       not200Handler: not200Handler,
                                                       completion: completion)
         } else {
             _ = URLSession.urlSessionDataTask(urlString: urlString,
-                                              mimeType: "application/json",
+                                              mimeType: mimeType,
                                               not200Handler: not200Handler,
                                               completion: completion)
         }
@@ -43,7 +44,8 @@ class JSONNetworkService {
         return nil
     }
 
-    class func getJSONObservable(urlString: String,
+    class func getDataObservable(urlString: String,
+                                 mimeType: String,
                                  networkingType: UserSettings.NetworkingType,
                                  not200Handler: HTTPURLResponseNot200? = nil) -> ObservableData? {
 
@@ -52,24 +54,25 @@ class JSONNetworkService {
             return nil
         }
 
-        var jsonObservable: ObservableData?
+        var dataObservable: ObservableData?
 
         if networkingType == .alamoFire {
-            jsonObservable = createAlamofireObservable(urlString: urlString, not200Handler: not200Handler)
+            dataObservable = createAlamofireObservable(urlString: urlString, mimeType: mimeType, not200Handler: not200Handler)
         } else {
-            jsonObservable = createURLSessionDataTaskObservable(urlString: urlString, not200Handler: not200Handler)
+            dataObservable = createURLSessionDataTaskObservable(urlString: urlString, mimeType: mimeType, not200Handler: not200Handler)
         }
 
-        return jsonObservable
+        return dataObservable
     }
 
     private static func createURLSessionDataTaskObservable(urlString: String,
+                                                           mimeType: String,
                                                            not200Handler: HTTPURLResponseNot200? = nil) -> ObservableData {
         return ObservableData.create({ (observer) -> Disposable in
             let dataTask = URLSession.urlSessionDataTask(urlString: urlString,
-                                                         mimeType: "application/json",
+                                                         mimeType: mimeType,
                                                          not200Handler: not200Handler) { result in
-                JSONNetworkService.handleResult(result: result, observer: observer)
+                SessionService.handleResult(result: result, observer: observer)
             }
 
             if let dataTask = dataTask {
@@ -85,12 +88,14 @@ class JSONNetworkService {
         })
     }
 
-    private static func createAlamofireObservable(urlString: String, not200Handler: HTTPURLResponseNot200? = nil) -> ObservableData {
+    private static func createAlamofireObservable(urlString: String,
+                                                  mimeType: String,
+                                                  not200Handler: HTTPURLResponseNot200? = nil) -> ObservableData {
         return ObservableData.create({ (observer) -> Disposable in
             let dataRequest = SessionManager.sessionManagerDataTask(urlString: urlString,
-                                                                    mimeType: "application/json",
+                                                                    mimeType: mimeType,
                                                                     not200Handler: not200Handler) { result in
-                JSONNetworkService.handleResult(result: result, observer: observer)
+                SessionService.handleResult(result: result, observer: observer)
             }
 
             return Disposables.create {

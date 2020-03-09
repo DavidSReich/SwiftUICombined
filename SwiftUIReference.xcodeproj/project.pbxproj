@@ -14,6 +14,9 @@
 		63803A622415E2A4002DBFDA /* ReferenceError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F71926F23C2D5F7008339D4 /* ReferenceError.swift */; };
 		638A251D24131CC300ABB1FF /* DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638A251C24131CC300ABB1FF /* DataSource.swift */; };
 		639A6DD024124077008F1D1F /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639A6DCF24124077008F1D1F /* NetworkService.swift */; };
+		63B3663124163B2D00348CF1 /* DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638A251C24131CC300ABB1FF /* DataSource.swift */; };
+		63B3663324163B6000348CF1 /* DataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B3663224163B6000348CF1 /* DataSourceTests.swift */; };
+		63B3663424163BBF00348CF1 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639A6DCF24124077008F1D1F /* NetworkService.swift */; };
 		63DA6493240F8DFA0034AD55 /* SolitaryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DA6492240F8DFA0034AD55 /* SolitaryViewModel.swift */; };
 		7F0EED4F23DD6970001FE055 /* HTTPUrlResponse+ValidateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F0EED4E23DD6970001FE055 /* HTTPUrlResponse+ValidateTests.swift */; };
 		7F2668B723A8758900FA8A7C /* SelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F2668B623A8758900FA8A7C /* SelectorView.swift */; };
@@ -56,7 +59,7 @@
 		7F992BBD23E0113600262548 /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FE2EDE2239E23B30079A508 /* UserDefaultsManager.swift */; };
 		7F992BBF23E0179100262548 /* ReferenceErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F992BBE23E0179100262548 /* ReferenceErrorTests.swift */; };
 		7FE2EDDB239E22DF0079A508 /* ImageDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FE2EDDA239E22DF0079A508 /* ImageDataSource.swift */; };
-		7FE2EDDE239E23160079A508 /* JSONNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FE2EDDC239E23160079A508 /* JSONNetworkService.swift */; };
+		7FE2EDDE239E23160079A508 /* SessionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FE2EDDC239E23160079A508 /* SessionService.swift */; };
 		7FE2EDDF239E23160079A508 /* URLSession+DataTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FE2EDDD239E23160079A508 /* URLSession+DataTask.swift */; };
 		7FE2EDE3239E23B30079A508 /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FE2EDE2239E23B30079A508 /* UserDefaultsManager.swift */; };
 		7FEF117F23C0BF8000F3E669 /* MetaModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FEF117E23C0BF8000F3E669 /* MetaModelTests.swift */; };
@@ -98,6 +101,7 @@
 		63803A5E2415E135002DBFDA /* ActivityIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorView.swift; sourceTree = "<group>"; };
 		638A251C24131CC300ABB1FF /* DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSource.swift; sourceTree = "<group>"; };
 		639A6DCF24124077008F1D1F /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
+		63B3663224163B6000348CF1 /* DataSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceTests.swift; sourceTree = "<group>"; };
 		63DA6492240F8DFA0034AD55 /* SolitaryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolitaryViewModel.swift; sourceTree = "<group>"; };
 		7F00740923AB45E200901C30 /* PlainMainView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlainMainView.swift; sourceTree = "<group>"; };
 		7F0EED4E23DD6970001FE055 /* HTTPUrlResponse+ValidateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HTTPUrlResponse+ValidateTests.swift"; sourceTree = "<group>"; };
@@ -131,7 +135,7 @@
 		7F992BBE23E0179100262548 /* ReferenceErrorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferenceErrorTests.swift; sourceTree = "<group>"; };
 		7FE2EDD8239E229A0079A508 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		7FE2EDDA239E22DF0079A508 /* ImageDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDataSource.swift; sourceTree = "<group>"; };
-		7FE2EDDC239E23160079A508 /* JSONNetworkService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONNetworkService.swift; sourceTree = "<group>"; };
+		7FE2EDDC239E23160079A508 /* SessionService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionService.swift; sourceTree = "<group>"; };
 		7FE2EDDD239E23160079A508 /* URLSession+DataTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "URLSession+DataTask.swift"; sourceTree = "<group>"; };
 		7FE2EDE2239E23B30079A508 /* UserDefaultsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultsManager.swift; sourceTree = "<group>"; };
 		7FEF117E23C0BF8000F3E669 /* MetaModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetaModelTests.swift; sourceTree = "<group>"; };
@@ -260,7 +264,7 @@
 			isa = PBXGroup;
 			children = (
 				7F71AE1323CAE88400FDF2AC /* ImageLoader.swift */,
-				7FE2EDDC239E23160079A508 /* JSONNetworkService.swift */,
+				7FE2EDDC239E23160079A508 /* SessionService.swift */,
 				639A6DCF24124077008F1D1F /* NetworkService.swift */,
 				7F71926F23C2D5F7008339D4 /* ReferenceError.swift */,
 			);
@@ -335,6 +339,7 @@
 				7F992BBE23E0179100262548 /* ReferenceErrorTests.swift */,
 				7FF105FF23E918DA00354D30 /* ResultsStackTests.swift */,
 				7F992BBA23E00D0A00262548 /* UserDefaultsManagerTests.swift */,
+				63B3663224163B6000348CF1 /* DataSourceTests.swift */,
 			);
 			path = SwiftUIReferenceTests;
 			sourceTree = "<group>";
@@ -607,7 +612,7 @@
 				7F8C619A23BF2259002BD830 /* BasicImageModel.swift in Sources */,
 				7FF105FE23E9060700354D30 /* ResultsStack.swift in Sources */,
 				63803A5F2415E135002DBFDA /* ActivityIndicatorView.swift in Sources */,
-				7FE2EDDE239E23160079A508 /* JSONNetworkService.swift in Sources */,
+				7FE2EDDE239E23160079A508 /* SessionService.swift in Sources */,
 				7F8C619623BF1D31002BD830 /* GiphyModel.swift in Sources */,
 				7FE2EDDB239E22DF0079A508 /* ImageDataSource.swift in Sources */,
 				7F2B947623EA4AB900F966F3 /* LaunchScreenView.swift in Sources */,
@@ -646,16 +651,19 @@
 				7F992BB823DFF86A00262548 /* ImageDataSourceTests.swift in Sources */,
 				7F992BBF23E0179100262548 /* ReferenceErrorTests.swift in Sources */,
 				7F992BBD23E0113600262548 /* UserDefaultsManager.swift in Sources */,
+				63B3663424163BBF00348CF1 /* NetworkService.swift in Sources */,
 				7F992BBC23E00F7300262548 /* UserSettings.swift in Sources */,
 				7F70D71123D81DEA003EF1A8 /* MessageModel.swift in Sources */,
 				7F8C61A223BF6A06002BD830 /* ImageDataModel.swift in Sources */,
 				7F70D71023D81DC0003EF1A8 /* HTTPUrlResponse+Validate.swift in Sources */,
 				7F71927123C2D78E008339D4 /* URLSession+DataTask.swift in Sources */,
 				7F8C61A523BF6E68002BD830 /* MetaModel.swift in Sources */,
+				63B3663324163B6000348CF1 /* DataSourceTests.swift in Sources */,
 				7FF1060123E91B1E00354D30 /* ResultsStack.swift in Sources */,
 				7F8C61B023BF94ED002BD830 /* ImageDataModelTests.swift in Sources */,
 				63803A622415E2A4002DBFDA /* ReferenceError.swift in Sources */,
 				7FF1060023E918DA00354D30 /* ResultsStackTests.swift in Sources */,
+				63B3663124163B2D00348CF1 /* DataSource.swift in Sources */,
 				7F992BBB23E00D0A00262548 /* UserDefaultsManagerTests.swift in Sources */,
 				7F8C61AB23BF8D1D002BD830 /* ImagesModelTests.swift in Sources */,
 				7F8C61A123BF6A00002BD830 /* GiphyModel.swift in Sources */,
