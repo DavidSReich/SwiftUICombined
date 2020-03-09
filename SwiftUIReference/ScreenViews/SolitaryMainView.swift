@@ -34,7 +34,17 @@ struct SolitaryMainView: View {
     // body used to be a lot more complicated, but still is helped by breaking it down into several funcs
     var body: some View {
         NavigationView {
-            mainView()
+            ZStack {
+                GeometryReader { geometry in
+                    self.mainView(geometry: geometry).opacity(self.isLoading ? 0.25 : 1.0)
+                }
+
+                Group {
+                    if isLoading {
+                        ActivityIndicatorView(style: .large)
+                    }
+                }
+            }
         }
         .navigationViewStyle(StackNavigationViewStyle())
         .alert(isPresented: $showingAlert) {
@@ -50,18 +60,18 @@ struct SolitaryMainView: View {
         }
     }
 
-    private func mainView() -> some View {
+    private func mainView(geometry: GeometryProxy) -> some View {
         VStack {
-            baseListWithNavBarView()
+            baseListWithNavBarView(geometry: geometry)
             .navigationBarTitle(Text(solitaryViewModel.title), displayMode: .inline)
             .onAppear(perform: loadEverything)
         }
     }
 
-    private func baseListWithNavBarView() -> some View {
+    private func baseListWithNavBarView(geometry: GeometryProxy) -> some View {
         basicImageList()
         .navigationBarItems(
-            leading: leadingNavigationItem(),
+            leading: leadingNavigationItem(geometry: geometry),
             trailing: trailingNavigationItem()
         )
     }
@@ -74,15 +84,18 @@ struct SolitaryMainView: View {
         }
     }
 
-    private func leadingNavigationItem() -> some View {
+    private func leadingNavigationItem(geometry: GeometryProxy) -> some View {
         // swiftlint:disable multiple_closures_with_trailing_closure
-        Button(solitaryViewModel.backButtonText) {
+        Button(action: {
             if self.solitaryViewModel.isBackButtonSettings {
                 self.settingsChanged = false
                 self.showingSettingsView = true
             } else {
                 self.goBack(toTop: false)
             }
+        }) {
+            //it appears that some of these settings are carried to the navigation title !!!
+            Text(solitaryViewModel.backButtonText).frame(width: geometry.size.width * 0.25).lineLimit(1)
         }
         .sheet(isPresented: $showingSettingsView, onDismiss: {
             if self.settingsChanged {
