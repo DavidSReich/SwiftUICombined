@@ -13,6 +13,7 @@ import Alamofire
 // This is overly complicated
 // but it is this way to illustrate all 4 combinations of RxSwift|NoRxSwift and UrlSession|Alamofire
 
+//TODO - rename this to "SessionService" -- and use "Data" instead of "JSON" in all names, etc.
 class JSONNetworkService {
 
     typealias ObservableData = Observable<DataResult>

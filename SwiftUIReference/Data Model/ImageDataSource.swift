@@ -11,13 +11,30 @@ import Foundation
 protocol ImageDataSourceProtocol {
     func clear()
     var tagsArray: [String] { get }
-    var images: [ImageDataModelProtocolWrapper] { get }
+    var imageModels: [ImageDataModelProtocolWrapper] { get set }
 }
 
-class ImageDataSource {
-    internal var images: [ImageDataModelProtocolWrapper]
+class ImageDataSource: ImageDataSourceProtocol {
+    private var images = [ImageDataModelProtocolWrapper]()
 
-    internal lazy var tagsArray: [String] = {
+    internal var tagsArray = [String]()
+
+    private func clearImages() {
+        images.removeAll()
+    }
+
+    internal var imageModels: [ImageDataModelProtocolWrapper] {
+        get {
+            images
+        }
+
+        set {
+            images = newValue
+            tagsArray = ImageDataSource.makeTagsArray(images: images)
+        }
+    }
+
+    static func makeTagsArray(images: [ImageDataModelProtocolWrapper]) -> [String] {
         var tagsSet = Set<String>()
 
         for imageModel in images {
@@ -25,19 +42,10 @@ class ImageDataSource {
         }
 
         return [String](tagsSet).sorted {$0 < $1}
-    }()
-
-    init(with images: [ImageDataModelProtocolWrapper]) {
-        self.images = images
     }
 
-    private func clearImages() {
+    internal func clear() {
         images.removeAll()
-    }
-}
-
-extension ImageDataSource: ImageDataSourceProtocol {
-    func clear() {
-        clearImages()
+        tagsArray.removeAll()
     }
 }

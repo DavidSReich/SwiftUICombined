@@ -16,38 +16,33 @@ class ResultsStackTests: XCTestCase {
         let result: Result<GiphyModel, ReferenceError> = jsonData.decodeData()
         // if decode fails it will be caught in another test.
 
-        let resultsStack = ResultsStack()
+        let resultsStack = ResultsStack<ImageDataModelProtocolWrapper>()
 
         if case .success(let giphyModel) = result {
             var imageDataModels = ImageDataModel.getWrappedImageModels(from: giphyModel)
 
-            resultsStack.pushResults(tagsString: "three images", images: imageDataModels)
+            resultsStack.pushResults(title: "three images", values: imageDataModels)
             _ = imageDataModels.popLast()
-            resultsStack.pushResults(tagsString: "two images", images: imageDataModels)
+            resultsStack.pushResults(title: "two images", values: imageDataModels)
             _ = imageDataModels.popLast()
-            resultsStack.pushResults(tagsString: "one image", images: imageDataModels)
+            resultsStack.pushResults(title: "one image", values: imageDataModels)
 
             var resultsTest = resultsStack.getLast()
             XCTAssertNotNil(resultsTest)
-            XCTAssertEqual("one image", resultsTest?.tagsString)
-            XCTAssertEqual(1, resultsTest?.images.count)
+            XCTAssertEqual("one image", resultsTest?.title)
+            XCTAssertEqual(1, resultsTest?.values.count)
 
             resultsTest = resultsStack.popResults()
             XCTAssertNotNil(resultsTest)
-            XCTAssertEqual("one image", resultsTest?.tagsString)
-            XCTAssertEqual(1, resultsTest?.images.count)
+            XCTAssertEqual("two images", resultsTest?.title)
+            XCTAssertEqual(2, resultsTest?.values.count)
 
             resultsTest = resultsStack.popResults()
             XCTAssertNotNil(resultsTest)
-            XCTAssertEqual("two images", resultsTest?.tagsString)
-            XCTAssertEqual(2, resultsTest?.images.count)
+            XCTAssertEqual("three images", resultsTest?.title)
+            XCTAssertEqual(3, resultsTest?.values.count)
 
             resultsTest = resultsStack.popResults()
-            XCTAssertNotNil(resultsTest)
-            XCTAssertEqual("three images", resultsTest?.tagsString)
-            XCTAssertEqual(3, resultsTest?.images.count)
-
-            resultsTest = resultsStack.getLast()
             XCTAssertNil(resultsTest)
         }
     }

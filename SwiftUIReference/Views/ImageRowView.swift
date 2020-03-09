@@ -41,8 +41,8 @@ struct ImageRowView: View {
 struct ImageRowView_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
-            ImageRowView(imageModel: BaseTestUtilities.getImageModel()!, showOnLeft: true)
-            ImageRowView(imageModel: BaseTestUtilities.getImageModel()!, showOnLeft: false)
+            ImageRowView(imageModel: BaseTestUtilities.getFishImageModel()!, showOnLeft: true)
+            ImageRowView(imageModel: BaseTestUtilities.getFishImageModel()!, showOnLeft: false)
         }
     }
 }

@@ -198,6 +198,10 @@ class BaseTestUtilities {
     }
 
     class func getImageDataModelData() -> Data {
+        return Data(imageDataModelString().utf8)
+    }
+
+    class func getFishImageDataModelData() -> Data {
         return Data(fishImageDataModelString().utf8)
     }
 

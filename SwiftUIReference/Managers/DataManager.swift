@@ -9,10 +9,6 @@
 import Foundation
 import RxSwift
 
-protocol HandleReferenceErrorProtocol {
-    func handleReferenceError(referenceError: ReferenceError)
-}
-
 protocol DataManagerProtocol: ResultStackProtocol {
     var imageModels: [ImageDataModelProtocolWrapper] { get }
     var tagsArray: [String] { get }

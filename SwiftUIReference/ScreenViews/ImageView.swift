@@ -51,6 +51,6 @@ struct ImageView: View {
 
 struct ImageView_Previews: PreviewProvider {
     static var previews: some View {
-        ImageView(imageModel: BaseTestUtilities.getImageModel()!)
+        ImageView(imageModel: BaseTestUtilities.getFishImageModel()!)
     }
 }

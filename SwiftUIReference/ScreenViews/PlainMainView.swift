@@ -9,7 +9,7 @@
 import SwiftUI
 
 // swiftlint:disable multiple_closures_with_trailing_closure
-
+/*
 struct PlainMainView: View {
 
     let dataManager = DataManager()
@@ -191,3 +191,4 @@ struct PlainMainView_Previews: PreviewProvider {
         return PlainMainView(userSettings: userSettings, mainViewLevel: 0, imageTags: userSettings.initialTags)
     }
 }
+*/
