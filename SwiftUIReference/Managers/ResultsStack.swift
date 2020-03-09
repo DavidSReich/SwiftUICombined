@@ -8,41 +8,59 @@
 
 import Foundation
 
-class ResultsStack {
+class ResultsStack<T> {
     private var resultsStack = [ResultBox]()
 
     private struct ResultBox {
         //for title
-        var tagString: String
-        var images: [ImageDataModelProtocolWrapper]
+        var title: String
+        var values: [T]
     }
 
-    func pushResults(tagsString: String, images: [ImageDataModelProtocolWrapper]) {
-        resultsStack.append(ResultBox(tagString: tagsString, images: images))
+    func clear() {
+        resultsStack.removeAll()
     }
 
-    func popResults() -> (tagsString: String, images: [ImageDataModelProtocolWrapper])? {
-        if let resultBox = resultsStack.popLast() {
-            return (resultBox.tagString, resultBox.images)
-        }
-
-        return nil
+    var resultsCount: Int {
+        resultsStack.count
     }
 
-    func getLast() -> (tagsString: String, images: [ImageDataModelProtocolWrapper])? {
-        if let resultBox = resultsStack.last {
-            return (resultBox.tagString, resultBox.images)
-        }
-
-        return nil
+    func pushResults(title: String, values: [T]) {
+        resultsStack.append(ResultBox(title: title, values: values))
+//        print(">>>>>> \(title) :: \(resultsStack.count) :: \(values.count)")
     }
 
-    func popToTop() -> (tagsString: String, images: [ImageDataModelProtocolWrapper])? {
+    func popResults() -> (title: String, values: [T])? {
+        _ = resultsStack.popLast()
+
+        return getLast()
+    }
+
+    func popToTop() -> (title: String, values: [T])? {
         guard resultsStack.count > 0 else {
             return nil
         }
         resultsStack.removeLast(resultsStack.count - 1)
 
         return getLast()
+    }
+
+    func getLast() -> (title: String, values: [T])? {
+        if let resultBox = resultsStack.last {
+            return (resultBox.title, resultBox.values)
+        }
+
+        return nil
+    }
+
+    func getPenultimate() -> (title: String, values: [T])? {
+        let count = resultsStack.count
+        if count < 2 {
+            return getLast()
+        }
+
+        let resultBox = resultsStack[count - 2]
+
+        return (resultBox.title, resultBox.values)
     }
 }
