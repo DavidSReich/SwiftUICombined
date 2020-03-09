@@ -199,15 +199,14 @@ class BaseTestUtilities {
 
     class func getImageDataModelData() -> Data {
         return Data(fishImageDataModelString().utf8)
-//        return Data(imageDataModelString().utf8)
     }
 
     class func getGiphyModelData() -> Data {
         return Data(giphyModelString().utf8)
     }
 
-    class func getImageModel() -> ImageDataModel? {
-        let jsonData = BaseTestUtilities.getImageDataModelData()
+    class func getFishImageModel() -> ImageDataModel? {
+        let jsonData = BaseTestUtilities.getFishImageDataModelData()
         let result: Result<ImageDataModel, ReferenceError> = jsonData.decodeData()
         // if decode fails it will be caught in another test.
 
