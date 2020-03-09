@@ -27,7 +27,11 @@ class DataSource {
                                useRxSwift: useRxSwift,
                                mimeType: mimeType,
                                networkingType: networkingType,
-                               not200Handler: self) { result in
+                               not200Handler: self) { [weak self] result in
+            guard let self = self else {
+                return
+            }
+
             switch result {
             case .success(let data):
                 self.handleData(tagString: tagString, data: data, completion: completion)
@@ -38,7 +42,7 @@ class DataSource {
     }
 
     private func handleData(tagString: String, data: Data, completion: @escaping (_ referenceError: ReferenceError?) -> Void) {
-//        data.prettyPrintData()
+        //        data.prettyPrintData()
 
         let result: Result<GiphyModel, ReferenceError> = data.decodeData()
         switch result {

@@ -37,7 +37,10 @@ class ImageLoader: ObservableObject {
             return
         }
 
-        downloadTask = URLSession.urlSessionDataTask(urlString: urlString, mimeType: "image/gif") { result in
+        downloadTask = URLSession.urlSessionDataTask(urlString: urlString, mimeType: "image/gif") { [weak self] result in
+            guard let self = self else {
+                return
+            }
             switch result {
             case .success(let data):
                 self.handleData(data: data, urlString: urlString)
