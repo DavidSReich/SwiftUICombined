@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		51018A54A5569F6FA6C41784 /* Pods_SwiftUIReferenceTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54470DDECDB710F01287B5BA /* Pods_SwiftUIReferenceTests.framework */; };
 		5B410C090D62EB9ADB2507EB /* Pods_SwiftUIReference.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3343D13A22FB0C138D12433 /* Pods_SwiftUIReference.framework */; };
+		633242A9241642AE004F4BF4 /* SessionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FE2EDDC239E23160079A508 /* SessionService.swift */; };
+		633242AA24167C3C004F4BF4 /* SessionManager+DataTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F70D70A23D7B79C003EF1A8 /* SessionManager+DataTask.swift */; };
 		633BB0D9240E4D580073BE7E /* fish.gif in Resources */ = {isa = PBXBuildFile; fileRef = 633BB0D8240E4D570073BE7E /* fish.gif */; };
 		63803A5F2415E135002DBFDA /* ActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63803A5E2415E135002DBFDA /* ActivityIndicatorView.swift */; };
 		63803A622415E2A4002DBFDA /* ReferenceError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F71926F23C2D5F7008339D4 /* ReferenceError.swift */; };
@@ -658,10 +660,12 @@
 				7F70D71023D81DC0003EF1A8 /* HTTPUrlResponse+Validate.swift in Sources */,
 				7F71927123C2D78E008339D4 /* URLSession+DataTask.swift in Sources */,
 				7F8C61A523BF6E68002BD830 /* MetaModel.swift in Sources */,
+				633242AA24167C3C004F4BF4 /* SessionManager+DataTask.swift in Sources */,
 				63B3663324163B6000348CF1 /* DataSourceTests.swift in Sources */,
 				7FF1060123E91B1E00354D30 /* ResultsStack.swift in Sources */,
 				7F8C61B023BF94ED002BD830 /* ImageDataModelTests.swift in Sources */,
 				63803A622415E2A4002DBFDA /* ReferenceError.swift in Sources */,
+				633242A9241642AE004F4BF4 /* SessionService.swift in Sources */,
 				7FF1060023E918DA00354D30 /* ResultsStackTests.swift in Sources */,
 				63B3663124163B2D00348CF1 /* DataSource.swift in Sources */,
 				7F992BBB23E00D0A00262548 /* UserDefaultsManagerTests.swift in Sources */,

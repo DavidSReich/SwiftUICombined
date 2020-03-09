@@ -58,16 +58,16 @@ class DataSource {
         resultsStack.clear()
     }
 
-    func getCurrentResults() -> [ImageDataModelProtocolWrapper]? {
-        resultsStack.getLast()?.values
-    }
-
     func popResults() -> [ImageDataModelProtocolWrapper]? {
         return resultsStack.popResults()?.values
     }
 
     func popToTop() -> [ImageDataModelProtocolWrapper]? {
         return resultsStack.popToTop()?.values
+    }
+
+    var currentResults: [ImageDataModelProtocolWrapper]? {
+        resultsStack.getLast()?.values
     }
 
     var penultimateTitle: String {
@@ -81,7 +81,7 @@ class DataSource {
     var tagsArray: [String] {
         var tagsSet = Set<String>()
 
-        if let imageModels = getCurrentResults() {
+        if let imageModels = currentResults {
             for imageModel in imageModels {
                 tagsSet.formUnion(imageModel.imageModel.tags)
             }

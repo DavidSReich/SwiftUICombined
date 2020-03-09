@@ -64,14 +64,7 @@ class SolitaryViewModel {
         isRightButtonPickTags ? pickTagsButtonText : startButtonText
     }
 
-    // dataManager
-    // dataManager
-    // dataManager
-    // dataManager
-
-    var tagsArray: [String] {
-        dataSource.tagsArray
-    }
+    // DataSource:
 
     func goBackOneLevel() {
         _ = dataSource.popResults()
@@ -85,8 +78,12 @@ class SolitaryViewModel {
         dataSource.clearAllResults()
     }
 
+    var tagsArray: [String] {
+        dataSource.tagsArray
+    }
+
     var imageModels: [ImageDataModelProtocolWrapper] {
-        return dataSource.getCurrentResults() ?? [ImageDataModelProtocolWrapper]()
+        return dataSource.currentResults ?? [ImageDataModelProtocolWrapper]()
     }
 
     func populateDataSource(imageTags: String, completion: @escaping (_ referenceError: ReferenceError?) -> Void) {

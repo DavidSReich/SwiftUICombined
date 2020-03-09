@@ -31,9 +31,9 @@ class SessionService {
 
         if networkingType == .alamoFire {
             _ = SessionManager.sessionManagerDataTask(urlString: urlString,
-                                                      mimeType: mimeType,
-                                                      not200Handler: not200Handler,
-                                                      completion: completion)
+                                                  mimeType: mimeType,
+                                                  not200Handler: not200Handler,
+                                                  completion: completion)
         } else {
             _ = URLSession.urlSessionDataTask(urlString: urlString,
                                               mimeType: mimeType,
