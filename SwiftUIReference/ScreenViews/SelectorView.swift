@@ -20,7 +20,7 @@ struct SelectorView: View {
     var body: some View {
         NavigationView {
             VStack {
-                Text(allSelectedStrings())
+                Text(allSelectedStrings()).padding(.horizontal)
                 Spacer()
                 List(allStrings, id: \.self, selection: $selectKeeper) { name in
                     Text(name)
