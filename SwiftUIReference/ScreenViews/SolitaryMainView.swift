@@ -18,9 +18,6 @@ import SwiftUI
 
 struct SolitaryMainView: View {
 
-    //inject this?
-//    @State private var solitaryViewModel = SolitaryViewModel(dataManager: DataManager(),
-//                                                             userSettings: UserDefaultsManager.getUserSettings())
     @State var solitaryViewModel: SolitaryViewModel
 
     @State private var imageModels = [ImageDataModelProtocolWrapper]()
@@ -31,6 +28,8 @@ struct SolitaryMainView: View {
 
     @State private var showingAlert = false
     @State private var alertMessageString: String?
+
+    @State private var isLoading = false
 
     // body used to be a lot more complicated, but still is helped by breaking it down into several funcs
     var body: some View {
@@ -86,7 +85,10 @@ struct SolitaryMainView: View {
             }
         }
         .sheet(isPresented: $showingSettingsView, onDismiss: {
-            self.loadEverything()
+            if self.settingsChanged {
+                self.solitaryViewModel.clearDataSource()
+                self.loadEverything()
+            }
         }) {
             SettingsView(isPresented: self.$showingSettingsView,
                          userSettings: self.$solitaryViewModel.userSettings,
@@ -106,7 +108,7 @@ struct SolitaryMainView: View {
         }
         .sheet(isPresented: $showingSelectorView, onDismiss: {
             if !self.nextImageTags.isEmpty {
-                self.solitaryViewModel.saveResults(nextImageTags: self.nextImageTags)
+                self.solitaryViewModel.tagString = self.nextImageTags
                 self.settingsChanged = true
                 self.loadEverything()
             }
@@ -118,26 +120,16 @@ struct SolitaryMainView: View {
     }
 
     private func loadEverything() {
+        //use settingsChanged in case .onAppear is triggered more than once.
+        //we should not assume that we have a reliable SwiftUI View lifecycle model at this time
         guard settingsChanged else {
             return
         }
         settingsChanged = false
 
-        self.getImageModels()
-    }
-
-    private func goBack(toTop: Bool) {
-        if toTop {
-            solitaryViewModel.goBackToTop()
-        } else {
-            solitaryViewModel.goBackOneLevel()
-        }
-
-        self.imageModels = self.solitaryViewModel.imageModels
-    }
-
-    private func getImageModels() {
+        isLoading = true
         solitaryViewModel.populateDataSource(imageTags: solitaryViewModel.tagString) { referenceError in
+            self.isLoading = false
             if let referenceError = referenceError {
                 //handle error
                 print("\(referenceError)")
@@ -149,14 +141,22 @@ struct SolitaryMainView: View {
             self.imageModels = self.solitaryViewModel.imageModels
         }
     }
+
+    private func goBack(toTop: Bool) {
+        if toTop {
+            solitaryViewModel.goBackToTop()
+        } else {
+            solitaryViewModel.goBackOneLevel()
+        }
+
+        self.imageModels = self.solitaryViewModel.imageModels
+    }
 }
 
 struct SolitaryMainView_Previews: PreviewProvider {
     static var previews: some View {
-//        let userSettings = UserDefaultsManager.getUserSettings()
-//        return SolitaryMainView(userSettings: userSettings, mainViewLevel: 0, imageTags: userSettings.initialTags)
-        let solitaryViewModel = SolitaryViewModel(dataManager: DataManager(),
-                                                                 userSettings: UserDefaultsManager.getUserSettings())
+        let solitaryViewModel = SolitaryViewModel(dataSource: DataSource(networkService: NetworkService()),
+                                                  userSettings: UserDefaultsManager.getUserSettings())
 
         return SolitaryMainView(solitaryViewModel: solitaryViewModel)
     }

@@ -14,26 +14,20 @@ class SolitaryViewModel {
     private let pickTagsButtonText = "Pick Tags"
     private let startButtonText = "Start"
 
-    private var dataManager: DataManagerProtocol
+    private var dataSource: DataSource
     var userSettings: UserSettings
 
-    private var viewLevel: Int = 0
     private var imageTags: String
 
-    init(dataManager: DataManagerProtocol, userSettings: UserSettings) {
-        self.dataManager = dataManager
+    init(dataSource: DataSource, userSettings: UserSettings) {
+        self.dataSource = dataSource
         self.userSettings = userSettings
         imageTags = userSettings.initialTags
     }
 
     var mainViewLevel: Int {
-        get {
-            viewLevel
-        }
-
-        set {
-            viewLevel = newValue
-        }
+        let level = dataSource.resultsDepth - 1
+        return level > 0 ? level : 0
     }
 
     var tagString: String {
@@ -47,7 +41,7 @@ class SolitaryViewModel {
     }
 
     var title: String {
-        isTopMainLevel ? "Starting Images" : imageTags
+        isTopMainLevel ? "Starting Images" : dataSource.title
     }
 
     var isTopMainLevel: Bool {
@@ -59,11 +53,11 @@ class SolitaryViewModel {
     }
 
     var isRightButtonPickTags: Bool {
-        mainViewLevel < userSettings.maxNumberOfLevels
+        mainViewLevel <= userSettings.maxNumberOfLevels
     }
 
     var backButtonText: String {
-        isBackButtonSettings ? settingsButtonText : dataManager.lastTagsString
+        isBackButtonSettings ? settingsButtonText : dataSource.penultimateTitle
     }
 
     var rightButtonText: String {
@@ -76,41 +70,32 @@ class SolitaryViewModel {
     // dataManager
 
     var tagsArray: [String] {
-        dataManager.tagsArray
-    }
-
-    func saveResults(nextImageTags: String) {
-        dataManager.pushResults(tagsString: imageTags)
-        tagString = nextImageTags
-        mainViewLevel += 1
+        dataSource.tagsArray
     }
 
     func goBackOneLevel() {
-        mainViewLevel = mainViewLevel > 1 ? mainViewLevel - 1 : 0
-        dataManager.popResults()
-        imageTags = dataManager.tagString
+        _ = dataSource.popResults()
     }
 
     func goBackToTop() {
-        mainViewLevel = 0
-        dataManager.popToTop()
-        imageTags = dataManager.tagString
+        _ = dataSource.popToTop()
     }
 
     func clearDataSource() {
-        dataManager.clearDataSource()
+        dataSource.clearAllResults()
     }
 
     var imageModels: [ImageDataModelProtocolWrapper] {
-        dataManager.imageModels
+        return dataSource.getCurrentResults() ?? [ImageDataModelProtocolWrapper]()
     }
 
     func populateDataSource(imageTags: String, completion: @escaping (_ referenceError: ReferenceError?) -> Void) {
         self.imageTags = imageTags
         let urlString = userSettings.getFullUrlString(tags: imageTags)
-        dataManager.populateDataSource(urlString: urlString,
-                                            useRxSwift: userSettings.useRxSwift,
-                                            networkingType: userSettings.networkingType,
-                                            completion: completion)
+        dataSource.getData(tagString: imageTags,
+                           urlString: urlString,
+                           useRxSwift: userSettings.useRxSwift,
+                           networkingType: userSettings.networkingType,
+                           completion: completion)
     }
 }
