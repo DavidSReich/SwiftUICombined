@@ -24,4 +24,15 @@ extension Data {
             return .failure(.decodeJSON(reason: "\(error)"))
         }
     }
+
+    // handy for debugging
+    func prettyPrintData() {
+        if let json = try? JSONSerialization.jsonObject(with: self, options: .mutableContainers) {
+            if let prettyPrintedData = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted) {
+                if let detailString = String(data: prettyPrintedData, encoding: .utf8) {
+                    print("json:\n\(detailString)")
+                }
+            }
+        }
+    }
 }
