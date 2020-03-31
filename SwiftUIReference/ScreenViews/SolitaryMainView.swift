@@ -51,11 +51,11 @@ struct SolitaryMainView: View {
             if UserDefaultsManager.hasAPIKey() {
                 return Alert(title: Text("Something went wrong!"),
                       message: Text( alertMessageString ?? "Unknown error!!??!!"),
-                      dismissButton: .default(Text("Done")))
+                      dismissButton: .default(Text("OK ... I guess")))
             } else {
                 return Alert(title: Text("API Key is missing"),
                       message: Text("Go to Settings to enter an API Key"),
-                      dismissButton: .default(Text("Done")))
+                      dismissButton: .default(Text("OK ... I guess")))
             }
         }
     }
