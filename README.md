@@ -1,6 +1,3 @@
-Currently updating SwiftUIReference.  MVVMizing it for better dependency injection.
-Hopefully this will allow previews (and unit testing of Views) to work without making API calls.
-And a little bit of refactoring.
 
 # SwiftUIReference
 
@@ -39,7 +36,7 @@ Most results/respones now use Result<T, ReferenceError> objects.
 Data:
 
 * DataModel classes - improved and Decodable for easier conversion from Data to objects.
-* DataSource class (contains DataModel protocols)
+* DataSource class - contains NetworkServices.
 
 Networking:
 
@@ -47,25 +44,17 @@ Networking:
 * Alamofire Session dataTask extension
 * HTTPURLResponse validation extension
 * Data decode<T> extension
-* JSONNetwork services - on top of URLSession and Session - both with and without an RxSwift wrapper
+* Session services and NetworkServices - on top of URLSession and Session - both with and without an RxSwift wrapper
 
-Managers:
-
-* DataManager -
-    * invokes JSONNetwork services
-    * uses results to create DataModels
-    * passes DataModels to DataSource
-    * hides all of that behind a DataManagerProtocol
-* ViewManager - is gone!
-    * SwiftUI now synthesizes UITableViewDataSource, UITableViewDelegate, etc.
-* UserDefaultsManager
-* ViewControllers - are gone -- replaced by SwiftUI Views
 * Screen Views -
     * Main
     * Image (detail)
     * Settings
     * Tag Selector
+Main screen view model.
+
 * Resuable UIViews - are gone -- replaced by more SwiftUI Views
 * Views -
     * Row View
     * Image Views - animated gif and asynch image
+    * ActivityIndicatorView
