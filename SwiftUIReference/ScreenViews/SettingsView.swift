@@ -24,13 +24,49 @@ struct SettingsView: View {
     @State private var enabledLink = false
     @State private var dummyBool = false
 
+    @State private var initialTags = ""
+    @State private var giphyAPIKey = ""
+    @State private var maxNumberOfImages = 5
+    @State private var maxNumberOfLevels = 5
+    @State private var useRxSwift = false
+    @State private var networkingType = UserSettings.NetworkingType.urlSession
+
+    private func loadSettings() {
+        initialTags = userSettings.initialTags
+        giphyAPIKey = userSettings.giphyAPIKey
+        maxNumberOfImages = userSettings.maxNumberOfImages
+        maxNumberOfLevels = userSettings.maxNumberOfLevels
+        useRxSwift = userSettings.useRxSwift
+        networkingType = userSettings.networkingType
+    }
+
+    private func loadDefaultSettings() {
+        let defaultSettings = UserSettings.getDefaultUserSettings()
+        self.userSettings.initialTags = defaultSettings.initialTags
+        self.userSettings.maxNumberOfImages = defaultSettings.maxNumberOfImages
+        self.userSettings.maxNumberOfLevels = defaultSettings.maxNumberOfLevels
+        self.userSettings.networkingType = defaultSettings.networkingType
+        self.userSettings.useRxSwift = defaultSettings.useRxSwift
+
+        loadSettings()
+    }
+
+    private func packSettings() {
+        userSettings.initialTags = initialTags
+        userSettings.giphyAPIKey = giphyAPIKey
+        userSettings.maxNumberOfImages = maxNumberOfImages
+        userSettings.maxNumberOfLevels = maxNumberOfLevels
+        userSettings.useRxSwift = useRxSwift
+        userSettings.networkingType = networkingType
+    }
+
     var body: some View {
         NavigationView {
             List {
                 Section(header: Text("Registration").font(.subheadline)) {
                     HStack {
                         Text("GIPHY API Key")
-                        TextField("", text: $userSettings.giphyAPIKey).multilineTextAlignment(.trailing)
+                        TextField("", text: $giphyAPIKey).multilineTextAlignment(.trailing)
                     }
                     HStack {
                         //trick to display a NavigationLink accessory chevron
@@ -55,37 +91,33 @@ struct SettingsView: View {
                 Section(header: Text("Tags").font(.subheadline)) {
                     HStack {
                         Text("Starting Tags")
-                        TextField("", text: $userSettings.initialTags).multilineTextAlignment(.trailing)
+                        TextField("", text: $initialTags).multilineTextAlignment(.trailing)
+                            .accessibility(identifier: "TagsTextField")
                     }
                 }
                 Section(header: Text("RxSwift").font(.subheadline)) {
-                    Toggle(isOn: $userSettings.useRxSwift) {
-                        Text("Use RxSwift")
-                    }
-                    .accessibility(identifier: "toggle ID")
-                    .accessibility(hint: Text("toggle hint"))
-                    .accessibility(label: Text("toggle label"))
-                    .accessibility(value: Text("toggle value"))
+                    Toggle(isOn: $useRxSwift, label: { Text("Use RxSwift") })
+                        .accessibility(label: Text("Use RxSwift"))
                 }
                 Section(header: Text("Networking").font(.subheadline)) {
-                    Picker(selection: $userSettings.networkingType, label: EmptyView()) {
+                    Picker(selection: $networkingType, label: EmptyView()) {
                         Text("Alamofire").tag(UserSettings.NetworkingType.alamoFire)
                         Text("URLSession").tag(UserSettings.NetworkingType.urlSession)
                     }.pickerStyle(SegmentedPickerStyle())
                 }
                 Section(header: Text("Limits").font(.subheadline)) {
                     StepperField(title: "Max # of images",
-                                 value: $userSettings.maxNumberOfImages,
+                                 value: $maxNumberOfImages,
                                  range: 5...30,
                                  accessibilityID: "imageStepper")
                     StepperField(title: "Max # of levels",
-                                 value: $userSettings.maxNumberOfLevels,
+                                 value: $maxNumberOfLevels,
                                  range: 5...20,
                                  accessibilityID: "levelStepper")
                 }
             }
             .listStyle(GroupedListStyle())
-            .navigationBarTitle(Text("Select tags"), displayMode: .inline)
+            .navigationBarTitle(Text("Settings"), displayMode: .inline)
             .navigationBarItems(
                 leading: Button("Cancel") {
                     self.isPresented = false
@@ -93,15 +125,11 @@ struct SettingsView: View {
                 trailing:
                 HStack {
                     Button("Reset") {
-                        let defaultSettings = UserSettings.getDefaultUserSettings()
-                        self.userSettings.initialTags = defaultSettings.initialTags
-                        self.userSettings.maxNumberOfImages = defaultSettings.maxNumberOfImages
-                        self.userSettings.maxNumberOfLevels = defaultSettings.maxNumberOfLevels
-                        self.userSettings.networkingType = defaultSettings.networkingType
-                        self.userSettings.useRxSwift = defaultSettings.useRxSwift
+                        self.loadDefaultSettings()
                     }
                     Divider()
                     Button("Apply") {
+                        self.packSettings()
                         let oldSettings = UserDefaultsManager.getUserSettings()
                         if oldSettings != self.userSettings {
                             UserDefaultsManager.saveUserSettings(userSettings: self.userSettings)
@@ -112,6 +140,7 @@ struct SettingsView: View {
                     }
                 }
             )
+                .onAppear(perform: loadSettings)
         }
         .navigationViewStyle(StackNavigationViewStyle())
     }
