@@ -36,7 +36,7 @@ class UserDefaultsManager {
         }
     }
 
-    private class func getInitialTags(defaults: UserDefaults = UserDefaultsManager.appDefaults) -> String {
+    class func getInitialTags(defaults: UserDefaults = UserDefaultsManager.appDefaults) -> String {
         guard let tags = defaults.string(forKey: InitialTagsKey) else {
             return defaultInitialTags
         }
