@@ -30,6 +30,8 @@ struct ImageRowView: View {
                 .border(Color.blue, width: 5)
                 .shadow(color: .blue, radius: 10)
                 .padding()
+                .accessibility(label: Text(imageModel.imageTitle))
+                .accessibility(hint: Text("Shows large image."))
 
             if !showOnLeft {
                 Spacer()

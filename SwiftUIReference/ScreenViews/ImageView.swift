@@ -21,6 +21,7 @@ struct ImageView: View {
                     .border(Color.orange, width: 5)
                     .shadow(color: .orange, radius: 15)
                     .scaleEffect(self.fitImageInScreen(size: geometry.size))
+                    .accessibility(label: Text(self.imageModel.imageTitle))
             }
 
         }.navigationBarTitle(Text(imageModel.imageTitle), displayMode: .inline)

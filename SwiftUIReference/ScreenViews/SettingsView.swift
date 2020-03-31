@@ -109,11 +109,11 @@ struct SettingsView: View {
                     StepperField(title: "Max # of images",
                                  value: $maxNumberOfImages,
                                  range: 5...30,
-                                 accessibilityID: "imageStepper")
+                                 accessibilityLabel: "Max number of images")
                     StepperField(title: "Max # of levels",
                                  value: $maxNumberOfLevels,
                                  range: 5...20,
-                                 accessibilityID: "levelStepper")
+                                 accessibilityLabel: "Max number of levels")
                 }
             }
             .listStyle(GroupedListStyle())
@@ -166,7 +166,7 @@ struct StepperField: View {
     var title: String
     var value: Binding<Int>
     var range: ClosedRange<Int>
-    var accessibilityID: String
+    var accessibilityLabel: String
 
     var body: some View {
         Stepper(value: value, in: range) {
@@ -174,12 +174,10 @@ struct StepperField: View {
                 Text(title)
                 Spacer()
                 Text("\(value.wrappedValue)")
-                    .accessibility(identifier: "value" + accessibilityID)
             }
         }
-        .accessibility(identifier: accessibilityID)
-        .accessibility(hint: Text("stepper hint"))
-        .accessibility(label: Text("stepper label"))
-        .accessibility(value: Text("stepper value"))
+        .accessibility(label: Text(accessibilityLabel))
+        .accessibility(value: Text("\(value.wrappedValue)"))
+        // During UITest the accessibility label overrides the visible label and it isn't possible to test what the user actually sees.
     }
 }
