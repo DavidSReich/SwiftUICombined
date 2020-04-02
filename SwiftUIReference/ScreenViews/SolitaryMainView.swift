@@ -140,6 +140,9 @@ struct SolitaryMainView: View {
         }
         settingsChanged = false
 
+        // reset
+        self.imageModels.removeAll()
+
         isLoading = true
         solitaryViewModel.populateDataSource(imageTags: solitaryViewModel.tagString) { referenceError in
             self.isLoading = false
@@ -151,7 +154,9 @@ struct SolitaryMainView: View {
                 return
             }
 
-            self.imageModels = self.solitaryViewModel.imageModels
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                self.imageModels = self.solitaryViewModel.imageModels
+            }
         }
     }
 
@@ -162,7 +167,10 @@ struct SolitaryMainView: View {
             solitaryViewModel.goBackOneLevel()
         }
 
-        self.imageModels = self.solitaryViewModel.imageModels
+        self.imageModels.removeAll()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            self.imageModels = self.solitaryViewModel.imageModels
+        }
     }
 }
 
