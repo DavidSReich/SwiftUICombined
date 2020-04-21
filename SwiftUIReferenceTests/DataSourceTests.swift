@@ -11,37 +11,36 @@ import XCTest
 
 class DataSourceTests: XCTestCase {
 
-    override func setUp() {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-
     func testDataSource() {
         let dataSource = DataSource(networkService: MockNetworkService())
 
+        let expectation = XCTestExpectation(description: "Testing HTTPURLResponse.validateData() -> AnyPublisher ...")
         dataSource.getData(tagString: "data1",
                            urlString: "urlstring",
-                           useRxSwift: true,
-                           mimeType: "",
-                           networkingType: .urlSession) { _ in
+                           mimeType: "") { _ in
+            expectation.fulfill()
         }
+        wait(for: [expectation], timeout: 0.1)
 
         XCTAssertEqual(1, dataSource.resultsDepth)
 
+        let expectation2 = XCTestExpectation(description: "Testing HTTPURLResponse.validateData() -> AnyPublisher ...")
         dataSource.getData(tagString: "data2",
                            urlString: "urlstring",
-                           useRxSwift: true,
-                           mimeType: "",
-                           networkingType: .urlSession) { _ in
+                           mimeType: "") { _ in
+            expectation2.fulfill()
         }
+        wait(for: [expectation2], timeout: 0.1)
 
         XCTAssertEqual(2, dataSource.resultsDepth)
 
+        let expectation3 = XCTestExpectation(description: "Testing HTTPURLResponse.validateData() -> AnyPublisher ...")
         dataSource.getData(tagString: "data3",
                            urlString: "urlstring",
-                           useRxSwift: true,
-                           mimeType: "",
-                           networkingType: .urlSession) { _ in
+                           mimeType: "") { _ in
+            expectation3.fulfill()
         }
+        wait(for: [expectation3], timeout: 0.1)
 
         XCTAssertEqual(3, dataSource.resultsDepth)
         XCTAssertEqual("data3", dataSource.title)

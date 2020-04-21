@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Combine
 
 // moved this out of unit tests so it could be used for previews!!!
 
@@ -227,12 +228,11 @@ class BaseTestUtilities {
 }
 
 class MockNetworkService: NetworkService {
-    override func getData(urlString: String,
-                          useRxSwift: Bool,
-                          mimeType: String,
-                          networkingType: UserSettings.NetworkingType,
-                          not200Handler: HTTPURLResponseNot200? = nil,
-                          completion: @escaping (DataResult) -> Void) {
-        completion(.success(BaseTestUtilities.getFishGiphyModelData()))
+    override func getDataPublisher(urlString: String,
+                                   mimeType: String,
+                                   not200Handler: HTTPURLResponseNot200? = nil) -> DataPublisher? {
+        return Just(BaseTestUtilities.getFishGiphyModelData())
+            .setFailureType(to: ReferenceError.self)
+            .eraseToAnyPublisher()
     }
 }

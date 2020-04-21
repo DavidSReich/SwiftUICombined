@@ -13,18 +13,11 @@ struct UserSettings: Equatable {
     var giphyAPIKey: String
     var maxNumberOfImages: Int
     var maxNumberOfLevels: Int
-    var useRxSwift: Bool
-    var networkingType: NetworkingType
 }
 
 extension UserSettings {
 
     private static let urlTemplate = "https://api.giphy.com/v1/gifs/search?api_key={API_KEY}&limit={MAX_IMAGES}&q={TAGS}"
-
-    enum NetworkingType: Int {
-        case alamoFire
-        case urlSession
-    }
 
     func getFullUrlString(tags: String) -> String {
 
@@ -39,8 +32,6 @@ extension UserSettings {
         return UserSettings(initialTags: "weather",
                             giphyAPIKey: "",
                             maxNumberOfImages: 7,
-                            maxNumberOfLevels: 5,
-                            useRxSwift: false,
-                            networkingType: .urlSession)
+                            maxNumberOfLevels: 5)
     }
 }

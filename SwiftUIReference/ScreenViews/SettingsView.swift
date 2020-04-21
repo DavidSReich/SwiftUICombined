@@ -28,16 +28,12 @@ struct SettingsView: View {
     @State private var giphyAPIKey = ""
     @State private var maxNumberOfImages = 5
     @State private var maxNumberOfLevels = 5
-    @State private var useRxSwift = false
-    @State private var networkingType = UserSettings.NetworkingType.urlSession
 
     private func loadSettings() {
         initialTags = userSettings.initialTags
         giphyAPIKey = userSettings.giphyAPIKey
         maxNumberOfImages = userSettings.maxNumberOfImages
         maxNumberOfLevels = userSettings.maxNumberOfLevels
-        useRxSwift = userSettings.useRxSwift
-        networkingType = userSettings.networkingType
     }
 
     private func loadDefaultSettings() {
@@ -45,8 +41,6 @@ struct SettingsView: View {
         self.userSettings.initialTags = defaultSettings.initialTags
         self.userSettings.maxNumberOfImages = defaultSettings.maxNumberOfImages
         self.userSettings.maxNumberOfLevels = defaultSettings.maxNumberOfLevels
-        self.userSettings.networkingType = defaultSettings.networkingType
-        self.userSettings.useRxSwift = defaultSettings.useRxSwift
 
         loadSettings()
     }
@@ -56,8 +50,6 @@ struct SettingsView: View {
         userSettings.giphyAPIKey = giphyAPIKey
         userSettings.maxNumberOfImages = maxNumberOfImages
         userSettings.maxNumberOfLevels = maxNumberOfLevels
-        userSettings.useRxSwift = useRxSwift
-        userSettings.networkingType = networkingType
     }
 
     var body: some View {
@@ -94,16 +86,6 @@ struct SettingsView: View {
                         TextField("", text: $initialTags).multilineTextAlignment(.trailing)
                             .accessibility(identifier: "TagsTextField")
                     }
-                }
-                Section(header: Text("RxSwift").font(.subheadline)) {
-                    Toggle(isOn: $useRxSwift, label: { Text("Use RxSwift") })
-                        .accessibility(label: Text("Use RxSwift"))
-                }
-                Section(header: Text("Networking").font(.subheadline)) {
-                    Picker(selection: $networkingType, label: EmptyView()) {
-                        Text("Alamofire").tag(UserSettings.NetworkingType.alamoFire)
-                        Text("URLSession").tag(UserSettings.NetworkingType.urlSession)
-                    }.pickerStyle(SegmentedPickerStyle())
                 }
                 Section(header: Text("Limits").font(.subheadline)) {
                     StepperField(title: "Max # of images",
@@ -152,9 +134,7 @@ struct SettingsView_Previews: PreviewProvider {
     @State static var userSettings = UserSettings(initialTags: "weather",
                                                   giphyAPIKey: "apiapiKeyKey",
                                                   maxNumberOfImages: 7,
-                                                  maxNumberOfLevels: 7,
-                                                  useRxSwift: false,
-                                                  networkingType: .urlSession)
+                                                  maxNumberOfLevels: 7)
     @State static var tags = "weather"
 
     static var previews: some View {

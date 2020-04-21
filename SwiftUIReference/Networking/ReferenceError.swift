@@ -24,7 +24,7 @@ public enum ReferenceError: Error {
     case decodeJSON(reason: String)
 
     /*
-        Most of these should be more user friendly and less techical.
+        Most of these should be more user friendly and less technical.
         This is a job for the UX/CX people.
     */
 
@@ -56,6 +56,31 @@ public enum ReferenceError: Error {
             }
         case .decodeJSON(let reason):
             return "Couldn't decode JSON: \(reason)"
+        }
+    }
+
+    public var errorName: String {
+        switch self {
+        case .dataTask:
+            return "dataTask"
+        case .noResponse:
+            return "noResponse"
+        case .notHttpURLResponse:
+            return "notHttpURLResponse"
+        case .responseNot200:
+            return "responseNot200"
+        case .apiNotHappy:
+            return "apiNotHappy"
+        case .wrongMimeType:
+            return "wrongMimeType"
+        case .noData:
+            return "noData"
+        case .badURL:
+            return "badURL"
+        case .noFetchJSON:
+            return "noFetchJSON"
+        case .decodeJSON:
+            return "decodeJSON"
         }
     }
 }

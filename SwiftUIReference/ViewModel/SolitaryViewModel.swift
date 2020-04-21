@@ -89,11 +89,10 @@ class SolitaryViewModel {
     func populateDataSource(imageTags: String, completion: @escaping (_ referenceError: ReferenceError?) -> Void) {
         self.imageTags = imageTags
         let urlString = userSettings.getFullUrlString(tags: imageTags)
+
         dataSource.getData(tagString: imageTags,
-                           urlString: urlString,
-                           useRxSwift: userSettings.useRxSwift,
-                           mimeType: "application/json",
-                           networkingType: userSettings.networkingType,
-                           completion: completion)
+                                        urlString: urlString,
+                                        mimeType: "application/json",
+                                        completion: completion)
     }
 }

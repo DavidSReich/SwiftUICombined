@@ -15,15 +15,11 @@ class UserDefaultsManagerTests: XCTestCase {
         let giphyAPIKey = "adsfinflsdfl023r"
         let maxNumberOfImages = 5
         let maxNumberOfLevels = 7
-        let useRxSwift = true
-        let networkingType = UserSettings.NetworkingType.alamoFire
 
         let firstSettings = UserSettings(initialTags: initialTags,
                                          giphyAPIKey: giphyAPIKey,
                                          maxNumberOfImages: maxNumberOfImages,
-                                         maxNumberOfLevels: maxNumberOfLevels,
-                                         useRxSwift: useRxSwift,
-                                         networkingType: networkingType)
+                                         maxNumberOfLevels: maxNumberOfLevels)
 
         UserDefaultsManager.saveUserSettings(userSettings: firstSettings)
         let secondSettings = UserDefaultsManager.getUserSettings()

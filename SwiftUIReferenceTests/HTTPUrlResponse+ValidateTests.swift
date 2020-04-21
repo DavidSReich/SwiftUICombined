@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Combine
 import XCTest
 
 class HTTPUrlResponseValidateTests: XCTestCase {
@@ -52,170 +53,210 @@ class HTTPUrlResponseValidateTests: XCTestCase {
     }
 
     func testGoodData() {
-        HTTPURLResponse.validateData(data: goodJSONData, response: goodHttpUrlResponse, error: nil, mimeType: nil) { result in
-            switch result {
-            case .success:
-                //supposed to succeed ... data is tested by the caller of this in a completion handler.
-                return
-            case .failure(let referenceError):
-                XCTFail("goodHttpUrlResponse should not fail.  Instead failed with \(referenceError).")
-            }
-        }
-    }
+        let expectation = XCTestExpectation(description: "Testing HTTPURLResponse.validateData() -> AnyPublisher ...")
 
-    func testErrors() {
-        // basic Error
-        // swiftlint:disable line_length
-        HTTPURLResponse.validateData(data: goodJSONData, response: goodHttpUrlResponse, error: ReferenceError.noData, mimeType: nil) { result in
-            switch result {
-            case .success:
-                XCTFail("Should fail with dataTask error.  But it didn't fail.")
-                return
-            case .failure(let referenceError):
-                if case ReferenceError.dataTask(error: let innerError) = referenceError {
-                    if case ReferenceError.noData = innerError {
-                        //supposed to fail at this point because a we set a noData error here
-                        return
-                    }
-                }
-                XCTFail("urlResponse should fail with dataTask.noData error.  Instead failed with \(referenceError).")
-            }
-        }
+        let validateDataPublisher: DataPublisher =
+            HTTPURLResponse.validateData(data: goodJSONData, response: goodHttpUrlResponse, mimeType: nil)
 
-        // no urlResponse
-        HTTPURLResponse.validateData(data: goodJSONData, response: nil, error: nil, mimeType: nil) { result in
-            switch result {
-            case .success:
-                XCTFail("Should fail with noResponse error.  But it didn't fail.")
-                return
-            case .failure(let referenceError):
-                if case ReferenceError.noResponse = referenceError {
-                    //supposed to fail at this point because a we did not provide a response here
-                    return
+        validateDataPublisher
+            .sink(receiveCompletion: { fini in
+                switch fini {
+                case .finished:
+                    expectation.fulfill()
+                case .failure:
+                    XCTFail("validateDataPublisher failed")
                 }
-                XCTFail("urlResponse should fail with noResponse error.  Instead failed with \(referenceError).")
-            }
-        }
+            }, receiveValue: { data in
+                XCTAssertEqual(self.goodJSONData, data)
+            })
+            .cancel()
+
+        XCTAssertNotNil(validateDataPublisher)
+        wait(for: [expectation], timeout: 0.1)
     }
 
     func testUrlResponse() {
         // succeed all the way until notHttpURLResponse
-        HTTPURLResponse.validateData(data: goodJSONData, response: goodUrlResponse, error: nil, mimeType: dummyMimeType) { result in
-            switch result {
-            case .success:
-                XCTFail("urlResponse should fail with notHttpURLResponse.  But it didn't fail.")
-            case .failure(let referenceError):
-                if case ReferenceError.notHttpURLResponse = referenceError {
-                    //supposed to fail at this point because a URLRepsonse cannot become a HTTPUrlResponse
-                    return
-                }
-                XCTFail("urlResponse should fail with notHttpURLResponse.  Instead failed with \(referenceError).")
-            }
-        }
+        let expectation = XCTestExpectation(description: "Testing HTTPURLResponse.validateData() -> AnyPublisher ...")
 
-        // wrong mime
-        HTTPURLResponse.validateData(data: goodJSONData, response: goodUrlResponse, error: nil, mimeType: "wrongMime") { result in
-            switch result {
-            case .success:
-                XCTFail("urlResponse should fail with wrongMimeType.  But it didn't fail.")
-            case .failure(let referenceError):
-                if case ReferenceError.wrongMimeType = referenceError {
-                    //supposed to fail at this point because a we set "wrongMime" here
-                    return
+        let validateDataPublisher: DataPublisher =
+            HTTPURLResponse.validateData(data: goodJSONData, response: goodUrlResponse, mimeType: dummyMimeType)
+
+        validateDataPublisher
+            .sink(receiveCompletion: { fini in
+                switch fini {
+                case .finished:
+                    XCTFail("urlResponse should fail with notHttpURLResponse.  But it didn't fail.")
+                case .failure(let referenceError):
+                    if case ReferenceError.notHttpURLResponse = referenceError {
+                        //supposed to fail at this point because a URLRepsonse cannot become a HTTPUrlResponse
+                        expectation.fulfill()
+                    } else {
+                        XCTFail("urlResponse should fail with notHttpURLResponse.  Instead failed with \(referenceError).")
+                    }
                 }
-                XCTFail("urlResponse should fail with wrongMimeType.  Instead failed with \(referenceError).")
-            }
-        }
+            }, receiveValue: { _ in
+                XCTFail("Got value -- but, urlResponse should fail with notHttpURLResponse and not receiveValue.")
+            })
+            .cancel()
+
+        XCTAssertNotNil(validateDataPublisher)
+        wait(for: [expectation], timeout: 0.1)
+    }
+
+    func testWrongMime() {
+        let expectation = XCTestExpectation(description: "Testing HTTPURLResponse.validateData() -> AnyPublisher ...")
+
+        let validateDataPublisher: DataPublisher =
+            HTTPURLResponse.validateData(data: goodJSONData, response: goodUrlResponse, mimeType: "wrongMime")
+
+        validateDataPublisher
+            .sink(receiveCompletion: { fini in
+                switch fini {
+                case .finished:
+                    XCTFail("urlResponse should fail with wrongMimeType.  But it didn't fail.")
+                case .failure(let referenceError):
+                    if case ReferenceError.wrongMimeType = referenceError {
+                        //supposed to fail at this point
+                        expectation.fulfill()
+                    } else {
+                        XCTFail("urlResponse should fail with wrongMimeType.  Instead failed with \(referenceError).")
+                    }
+                }
+            }, receiveValue: { _ in
+                XCTFail("Got value -- but, urlResponse should fail with wrongMimeType and not receiveValue.")
+            })
+            .cancel()
+
+        XCTAssertNotNil(validateDataPublisher)
+        wait(for: [expectation], timeout: 0.1)
     }
 
     func test401HttpUrlResponseCode() {
-        HTTPURLResponse.validateData(data: BaseTestUtilities.getMessageModelData(), response: bad401HttpUrlResponse, error: nil, mimeType: nil, not200Handler: self) { result in
-            switch result {
-            case .success:
-                XCTFail("Should fail with apiNotHappy error.  But it didn't fail.")
-                return
-            case .failure(let referenceError):
-                if case ReferenceError.apiNotHappy(message: let message) = referenceError {
-                    XCTAssertEqual("Invalid authentication credentials", message)
-                } else {
-                    XCTFail("urlResponse should fail with apiNotHappy error.  Instead failed with \(referenceError).")
+        let expectation = XCTestExpectation(description: "Testing HTTPURLResponse.validateData() -> AnyPublisher ...")
+
+        let validateDataPublisher: DataPublisher =
+            HTTPURLResponse.validateData(data: BaseTestUtilities.getMessageModelData(),
+                                         response: bad401HttpUrlResponse,
+                                         mimeType: nil,
+                                         not200Handler: self)
+
+        validateDataPublisher
+            .sink(receiveCompletion: { fini in
+                switch fini {
+                case .finished:
+                    XCTFail("urlResponse should fail with apiNotHappy.  But it didn't fail.")
+                case .failure(let referenceError):
+                    if case ReferenceError.apiNotHappy(message: let message) = referenceError {
+                        XCTAssertEqual("Invalid authentication credentials", message)
+                        expectation.fulfill()
+                    } else {
+                        XCTFail("urlResponse should fail with apiNotHappy error.  Instead failed with \(referenceError).")
+                    }
                 }
-            }
-        }
+            }, receiveValue: { _ in
+                XCTFail("Got value -- but, urlResponse should fail with apiNotHappy and not receiveValue.")
+            })
+            .cancel()
+
+        XCTAssertNotNil(validateDataPublisher)
+        wait(for: [expectation], timeout: 0.1)
     }
 
     func test403HttpUrlResponseCode() {
-        HTTPURLResponse.validateData(data: BaseTestUtilities.getMessageModelData(), response: bad403HttpUrlResponse, error: nil, mimeType: nil, not200Handler: self) { result in
-            switch result {
-            case .success:
-                XCTFail("Should fail with apiNotHappy error.  But it didn't fail.")
-                return
-            case .failure(let referenceError):
-                if case ReferenceError.apiNotHappy(message: let message) = referenceError {
-                    XCTAssertEqual("API Key might be incorrect.  Go to Settings to check it.", message)
-                } else {
-                    XCTFail("urlResponse should fail with apiNotHappy error.  Instead failed with \(referenceError).")
+        let expectation = XCTestExpectation(description: "Testing HTTPURLResponse.validateData() -> AnyPublisher ...")
+
+        let validateDataPublisher: DataPublisher =
+            HTTPURLResponse.validateData(data: BaseTestUtilities.getMessageModelData(),
+                                         response: bad403HttpUrlResponse,
+                                         mimeType: nil,
+                                         not200Handler: self)
+
+        validateDataPublisher
+            .sink(receiveCompletion: { fini in
+                switch fini {
+                case .finished:
+                    XCTFail("urlResponse should fail with apiNotHappy.  But it didn't fail.")
+                case .failure(let referenceError):
+                    if case ReferenceError.apiNotHappy(message: let message) = referenceError {
+                        XCTAssertEqual("API Key might be incorrect.  Go to Settings to check it.", message)
+                        expectation.fulfill()
+                    } else {
+                        XCTFail("urlResponse should fail with apiNotHappy error.  Instead failed with \(referenceError).")
+                    }
                 }
-            }
-        }
+            }, receiveValue: { _ in
+                XCTFail("Got value -- but, urlResponse should fail with apiNotHappy and not receiveValue.")
+            })
+            .cancel()
+
+        XCTAssertNotNil(validateDataPublisher)
+        wait(for: [expectation], timeout: 0.1)
     }
 
     func testBadResponseCode() {
-        HTTPURLResponse.validateData(data: goodJSONData, response: badHttpUrlResponse, error: nil, mimeType: nil) { result in
-            switch result {
-            case .success:
-                XCTFail("Should fail with responseNot200 error.  But it didn't fail.")
-                return
-            case .failure(let referenceError):
-                if case ReferenceError.responseNot200(responseCode: let responseCode) = referenceError {
-                    if responseCode == 500 {
+        let expectation = XCTestExpectation(description: "Testing HTTPURLResponse.validateData() -> AnyPublisher ...")
+
+        let validateDataPublisher: DataPublisher =
+            HTTPURLResponse.validateData(data: goodJSONData, response: badHttpUrlResponse, mimeType: nil)
+
+        validateDataPublisher
+            .sink(receiveCompletion: { fini in
+                switch fini {
+                case .finished:
+                    XCTFail("urlResponse should fail with responseNot200.  But it didn't fail.")
+                case .failure(let referenceError):
+                    if case ReferenceError.responseNot200(responseCode: let responseCode) = referenceError {
+                        XCTAssertEqual(500, responseCode)
+                        expectation.fulfill()
                         //supposed to fail at this point because a we set a responseCode == 500 here.
-                        return
+                    } else {
+                        XCTFail("urlResponse should fail with responseNot200.500 error.  Instead failed with \(referenceError).")
                     }
                 }
-                XCTFail("urlResponse should fail with responseNot200.500 error.  Instead failed with \(referenceError).")
-            }
-        }
+            }, receiveValue: { _ in
+                XCTFail("Got value -- but, urlResponse should fail with responseNot200.500 and not receiveValue.")
+            })
+            .cancel()
+
+        XCTAssertNotNil(validateDataPublisher)
+        wait(for: [expectation], timeout: 0.1)
     }
 
     func testBadData() {
+        let expectation = XCTestExpectation(description: "Testing HTTPURLResponse.validateData() -> AnyPublisher ...")
+
         // data with count zero
-        HTTPURLResponse.validateData(data: Data(), response: goodHttpUrlResponse, error: nil, mimeType: nil) { result in
-            switch result {
-            case .success:
-                XCTFail("urlResponse should fail with noData.  But it didn't fail.")
-            case .failure(let referenceError):
-                if case ReferenceError.noData = referenceError {
-                    //supposed to fail at this point because we set empty data.
-                    return
-                }
-                XCTFail("urlResponse should fail with noData.  Instead failed with \(referenceError).")
-            }
-        }
+        let validateDataPublisher: DataPublisher =
+            HTTPURLResponse.validateData(data: Data(), response: goodHttpUrlResponse, mimeType: nil)
 
-        // missing data
-        HTTPURLResponse.validateData(data: nil, response: goodHttpUrlResponse, error: nil, mimeType: nil) { result in
-            switch result {
-            case .success:
-                XCTFail("urlResponse should fail with noData.  But it didn't fail.")
-            case .failure(let referenceError):
-                if case ReferenceError.noData = referenceError {
-                    //supposed to fail at this point because we set no data.
-                    return
+        validateDataPublisher
+            .sink(receiveCompletion: { fini in
+                switch fini {
+                case .finished:
+                    XCTFail("urlResponse should fail with noData.  But it didn't fail.")
+                case .failure(let referenceError):
+                    if case ReferenceError.noData = referenceError {
+                        expectation.fulfill()
+                        //supposed to fail at this point because a we set empty data.
+                    } else {
+                        XCTFail("urlResponse should fail with noData error.  Instead failed with \(referenceError).")
+                    }
                 }
-                XCTFail("urlResponse should fail with noData.  Instead failed with \(referenceError).")
-            }
-        }
-    }
+            }, receiveValue: { _ in
+                XCTFail("Got value -- but, urlResponse should fail with noData and not receiveValue.")
+            })
+            .cancel()
 
-    private func handle401and403() {
+        XCTAssertNotNil(validateDataPublisher)
+        wait(for: [expectation], timeout: 0.1)
     }
 }
 
 extension HTTPUrlResponseValidateTests: HTTPURLResponseNot200 {
     // handle non-200 response codes -- in case there's more info available
-    // returns true if it "consumes" the case
-    func responseHandler(urlResponse: HTTPURLResponse, data: Data?, completion: @escaping (DataResult) -> Void) -> Bool {
+    // returns nil if no error mapping was performed
+    internal func mapError(urlResponse: HTTPURLResponse, data: Data?) -> ReferenceError? {
         if [401, 403].contains(urlResponse.statusCode), let data = data {
             let result: Result<MessageModel, ReferenceError> = data.decodeData()
 
@@ -225,11 +266,11 @@ extension HTTPUrlResponseValidateTests: HTTPURLResponseNot200 {
                 if urlResponse.statusCode == 403 {
                     message = "API Key might be incorrect.  Go to Settings to check it."
                 }
-                completion(.failure(.apiNotHappy(message: message)))
-                return true
+
+                return .apiNotHappy(message: message)
             }
         }
 
-        return false
+        return nil
     }
 }

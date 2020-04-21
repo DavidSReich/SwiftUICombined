@@ -7,8 +7,10 @@
 //
 
 import Foundation
+import Combine
 
 public typealias DataResult = Result<Data, ReferenceError>
+public typealias DataPublisher = AnyPublisher<Data, ReferenceError>
 
 extension Data {
     func decodeData<T: Decodable>() -> Result<T, ReferenceError> {
@@ -23,6 +25,18 @@ extension Data {
             print("\(T.Type.self) decode threw error: \(error)")
             return .failure(.decodeJSON(reason: "\(error)"))
         }
+    }
+
+    func decodeData<T: Decodable>() -> AnyPublisher<T, ReferenceError> {
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+
+        return Just(self)
+            .decode(type: T.self, decoder: decoder)
+            .mapError { error in
+                .decodeJSON(reason: "\(error)")
+            }
+            .eraseToAnyPublisher()
     }
 
     // handy for debugging

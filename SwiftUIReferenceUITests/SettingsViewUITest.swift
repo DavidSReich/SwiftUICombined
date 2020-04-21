@@ -8,9 +8,6 @@
 
 import XCTest
 
-// swiftlint:disable line_length
-// swiftlint:disable function_body_length
-
 class SettingsViewUITest: XCTestCase {
 
     var app: XCUIApplication?
@@ -64,27 +61,6 @@ class SettingsViewUITest: XCTestCase {
         let tagsTextField = tablesQuery.cells.textFields["TagsTextField"]
         XCTAssertTrue(tagsTextField.exists)
         XCTAssertEqual(UserDefaultsManager.getInitialTags(), tagsTextField.value as? String)
-
-        // RxSwift section
-        XCTAssertTrue(tablesQuery.staticTexts["RxSwift"].exists)
-        let useRxswiftSwitch = tablesQuery.cells/*@START_MENU_TOKEN@*/.switches["Use RxSwift"]/*[[".cells.switches[\"Use RxSwift\"]",".switches[\"Use RxSwift\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
-        XCTAssertTrue(useRxswiftSwitch.exists)
-        XCTAssertEqual("0", useRxswiftSwitch.value as? String)
-        useRxswiftSwitch.tap()
-        XCTAssertEqual("1", useRxswiftSwitch.value as? String)
-
-        // Networking section
-        XCTAssertTrue(tablesQuery.staticTexts["Networking"].exists)
-        let alamofireButton = tablesQuery.cells/*@START_MENU_TOKEN@*/.buttons["Alamofire"]/*[[".cells",".segmentedControls.buttons[\"Alamofire\"]",".buttons[\"Alamofire\"]"],[[[-1,2],[-1,1],[-1,0,1]],[[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/
-        XCTAssertTrue(alamofireButton.exists)
-        let urlsessionButton = tablesQuery.cells.buttons["URLSession"]
-        XCTAssertTrue(urlsessionButton.exists)
-        alamofireButton.tap()
-        XCTAssertTrue(alamofireButton.isSelected)
-        XCTAssertFalse(urlsessionButton.isSelected)
-        urlsessionButton.tap()
-        XCTAssertFalse(alamofireButton.isSelected)
-        XCTAssertTrue(urlsessionButton.isSelected)
 
         // Limits section
         XCTAssertTrue(tablesQuery.staticTexts["Limits"].exists)

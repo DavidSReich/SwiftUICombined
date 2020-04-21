@@ -7,66 +7,70 @@
 //
 
 import Foundation
+import Combine
 
 protocol HTTPURLResponseNot200 {
     // handle non-200 response codes -- in case there's more info available
-    // returns true if it "consumes" the case
-    func responseHandler(urlResponse: HTTPURLResponse, data: Data?, completion: @escaping (DataResult) -> Void) -> Bool
+    // returns nil if no error mapping was performed
+    func mapError(urlResponse: HTTPURLResponse, data: Data?) -> ReferenceError?
 }
 
 extension HTTPURLResponse {
-    static func validateData(data: Data?,
-                             response: URLResponse?,
-                             error: Error?,
+    static func validateData(data: Data,
+                             response: URLResponse,
                              mimeType: String?,
-                             not200Handler: HTTPURLResponseNot200? = nil,
-                             completion: @escaping (DataResult) -> Void) {
-        if let error = error {
-            print("DataTask error: \(error)")
-            completion(.failure(.dataTask(error: error)))
-            return
+                             not200Handler: HTTPURLResponseNot200? = nil) -> DataPublisher {
+        let result = validateDataError(data: data, response: response, mimeType: mimeType, not200Handler: not200Handler)
+
+        switch result {
+        case .success(let data):
+            return Just(data)
+                .setFailureType(to: ReferenceError.self)
+                .eraseToAnyPublisher()
+        case .failure(let referenceError):
+            print("\(referenceError)")
+            return Fail(error: referenceError).eraseToAnyPublisher()
         }
+    }
+
+    static func validateDataError(data: Data?,
+                                  response: URLResponse?,
+                                  mimeType: String?,
+                                  not200Handler: HTTPURLResponseNot200? = nil) -> DataResult {
 
         guard let response = response else {
             print("No response.")
-            completion(.failure(.noResponse))
-            return
+            return .failure(.noResponse)
         }
 
         if let mimeType = mimeType,
             let mime = response.mimeType,
-                mime != mimeType {
+            mime != mimeType {
             print("Response type not \(mimeType): \(String(describing: response.mimeType))")
-            completion(.failure(.wrongMimeType(targeMimeType: mimeType, receivedMimeType: response.mimeType ?? "missing type")))
-            return
+            return .failure(.wrongMimeType(targeMimeType: mimeType, receivedMimeType: response.mimeType ?? "missing type"))
         }
 
         guard let urlResponse = response as? HTTPURLResponse else {
             print("Response not URLResponse: \(response).")
-            completion(.failure(.notHttpURLResponse))
-            return
+            return .failure(.notHttpURLResponse)
         }
 
         guard urlResponse.statusCode == 200 else {
             if let not200Handler = not200Handler {
-                if not200Handler.responseHandler(urlResponse: urlResponse, data: data, completion: completion) {
-                    return
+                if let refError = not200Handler.mapError(urlResponse: urlResponse, data: data) {
+                    return .failure(refError)
                 }
             }
 
             print("Bad response statusCode = \(urlResponse.statusCode)")
-            completion(.failure(.responseNot200(responseCode: urlResponse.statusCode)))
-            return
+            return .failure(.responseNot200(responseCode: urlResponse.statusCode))
         }
 
         guard let data = data, data.count > 0 else {
             print("No data.")
-            completion(.failure(.noData))
-            return
+            return .failure(.noData)
         }
 
-        DispatchQueue.main.async {
-            completion(.success(data))
-        }
+        return .success(data)
     }
 }

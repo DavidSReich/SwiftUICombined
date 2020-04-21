@@ -7,11 +7,13 @@
 //
 
 import Foundation
+import Combine
 
 class DataSource {
     private let networkService: NetworkService
 
     private var resultsStack = ResultsStack<ImageDataModelProtocolWrapper>()
+    private var disposables = Set<AnyCancellable>()
 
     init(networkService: NetworkService) {
         self.networkService = networkService
@@ -19,39 +21,31 @@ class DataSource {
 
     func getData(tagString: String,
                  urlString: String,
-                 useRxSwift: Bool,
                  mimeType: String,
-                 networkingType: UserSettings.NetworkingType,
                  completion: @escaping (_ referenceError: ReferenceError?) -> Void) {
-        networkService.getData(urlString: urlString,
-                               useRxSwift: useRxSwift,
-                               mimeType: mimeType,
-                               networkingType: networkingType,
-                               not200Handler: self) { [weak self] result in
-            guard let self = self else {
-                return
-            }
-
-            switch result {
-            case .success(let data):
-                self.handleData(tagString: tagString, data: data, completion: completion)
-            case .failure(let referenceError):
-                completion(referenceError)
-            }
+        guard let dataPublisher = networkService.getDataPublisher(urlString: urlString, mimeType: mimeType, not200Handler: self) else {
+            completion(.badURL)
+            return
         }
-    }
 
-    private func handleData(tagString: String, data: Data, completion: @escaping (_ referenceError: ReferenceError?) -> Void) {
-        //        data.prettyPrintData()
-
-        let result: Result<GiphyModel, ReferenceError> = data.decodeData()
-        switch result {
-        case .success(let giphyModel):
-            resultsStack.pushResults(title: tagString, values: ImageDataModel.getWrappedImageModels(from: giphyModel))
-            completion(nil)
-        case .failure(let referenceError):
-            completion(referenceError)
+        dataPublisher
+            .flatMap(maxPublishers: .max(1)) { data -> AnyPublisher<GiphyModel, ReferenceError> in
+                let ssws: AnyPublisher<GiphyModel, ReferenceError> = data.decodeData()
+                return ssws
         }
+        .receive(on: DispatchQueue.main)
+        .sink(receiveCompletion: { value in
+            switch value {
+            case .failure(let error):
+                completion(error)
+            case .finished:
+                completion(nil)
+            }
+        }, receiveValue: { [weak self] giphyModel in
+            guard let self = self else { return }
+            self.resultsStack.pushResults(title: tagString, values: ImageDataModel.getWrappedImageModels(from: giphyModel))
+        })
+            .store(in: &disposables)
     }
 
     var resultsDepth: Int {
@@ -97,10 +91,8 @@ class DataSource {
 
 extension DataSource: HTTPURLResponseNot200 {
     // handle non-200 response codes -- in case there's more info available
-    // returns true if it "consumes" the case
-    internal func responseHandler(urlResponse: HTTPURLResponse,
-                                  data: Data?,
-                                  completion: @escaping (DataResult) -> Void) -> Bool {
+    // returns nil if no error mapping was performed
+    internal func mapError(urlResponse: HTTPURLResponse, data: Data?) -> ReferenceError? {
         if [401, 403].contains(urlResponse.statusCode), let data = data {
             let result: Result<MessageModel, ReferenceError> = data.decodeData()
 
@@ -110,11 +102,11 @@ extension DataSource: HTTPURLResponseNot200 {
                 if urlResponse.statusCode == 403 {
                     message = "API Key might be incorrect.  Go to Settings to check it."
                 }
-                completion(.failure(.apiNotHappy(message: message)))
-                return true
+
+                return .apiNotHappy(message: message)
             }
         }
 
-        return false
+        return nil
     }
 }
