@@ -14,16 +14,11 @@ class NetworkService {
                           mimeType: String,
                           not200Handler: HTTPURLResponseNot200? = nil) -> DataPublisher? {
 
-        guard let urlString = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
-            print("Cannot make URL")
-            // .badURL
-            return nil
-        }
-
-        guard let url = URL(string: urlString) else {
-            print("Cannot make URL")
-            // .badURL
-            return nil
+        guard let urlString = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+            let url = URL(string: urlString) else {
+                print("Cannot make URL")
+                // .badURL
+                return nil
         }
 
         return URLSession.shared.dataTaskPublisher(for: url)
