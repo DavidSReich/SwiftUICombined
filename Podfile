@@ -6,8 +6,6 @@ target 'SwiftUIReference' do
   use_frameworks!
 
   pod 'SwiftGifOrigin', '~> 1.7.0'
-  pod 'RxSwift'
-  pod 'Alamofire'
 
   # Pods for SwiftUIReference
 
