@@ -65,6 +65,7 @@ class SettingsViewUITest: XCTestCase {
         // Limits section
         XCTAssertTrue(tablesQuery.staticTexts["Limits"].exists)
 
+        // swiftlint:disable line_length
         let imageStepper = tablesQuery.cells/*@START_MENU_TOKEN@*/.otherElements["Max number of images"]/*[[".cells",".otherElements[\"Max number of images\"]",".otherElements[\"imageStepper\"]"],[[[-1,2],[-1,1],[-1,0,1]],[[-1,2],[-1,1]]],[1]]@END_MENU_TOKEN@*/
         let levelStepper = tablesQuery.cells/*@START_MENU_TOKEN@*/.otherElements["Max number of levels"]/*[[".cells",".otherElements[\"Max number of levels\"]",".otherElements[\"levelStepper\"]"],[[[-1,2],[-1,1],[-1,0,1]],[[-1,2],[-1,1]]],[1]]@END_MENU_TOKEN@*/
         XCTAssertTrue(imageStepper.exists)

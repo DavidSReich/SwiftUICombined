@@ -11,7 +11,6 @@
 		5B410C090D62EB9ADB2507EB /* Pods_SwiftUIReference.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3343D13A22FB0C138D12433 /* Pods_SwiftUIReference.framework */; };
 		630FA6E92429A1530008C8E8 /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FE2EDE2239E23B30079A508 /* UserDefaultsManager.swift */; };
 		630FA6EA2429A20B0008C8E8 /* UserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F92453923C54B45006EACF3 /* UserSettings.swift */; };
-		633242A9241642AE004F4BF4 /* SessionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FE2EDDC239E23160079A508 /* SessionService.swift */; };
 		633BB0D9240E4D580073BE7E /* fish.gif in Resources */ = {isa = PBXBuildFile; fileRef = 633BB0D8240E4D570073BE7E /* fish.gif */; };
 		63803A5F2415E135002DBFDA /* ActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63803A5E2415E135002DBFDA /* ActivityIndicatorView.swift */; };
 		63803A622415E2A4002DBFDA /* ReferenceError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F71926F23C2D5F7008339D4 /* ReferenceError.swift */; };
@@ -58,7 +57,6 @@
 		7F992BBC23E00F7300262548 /* UserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F92453923C54B45006EACF3 /* UserSettings.swift */; };
 		7F992BBD23E0113600262548 /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FE2EDE2239E23B30079A508 /* UserDefaultsManager.swift */; };
 		7F992BBF23E0179100262548 /* ReferenceErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F992BBE23E0179100262548 /* ReferenceErrorTests.swift */; };
-		7FE2EDDE239E23160079A508 /* SessionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FE2EDDC239E23160079A508 /* SessionService.swift */; };
 		7FE2EDE3239E23B30079A508 /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FE2EDE2239E23B30079A508 /* UserDefaultsManager.swift */; };
 		7FEF117F23C0BF8000F3E669 /* MetaModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FEF117E23C0BF8000F3E669 /* MetaModelTests.swift */; };
 		7FEF118123C0D09200F3E669 /* GiphyModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FEF118023C0D09200F3E669 /* GiphyModelTests.swift */; };
@@ -130,7 +128,6 @@
 		7F92453923C54B45006EACF3 /* UserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettings.swift; sourceTree = "<group>"; };
 		7F992BBA23E00D0A00262548 /* UserDefaultsManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsManagerTests.swift; sourceTree = "<group>"; };
 		7F992BBE23E0179100262548 /* ReferenceErrorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferenceErrorTests.swift; sourceTree = "<group>"; };
-		7FE2EDDC239E23160079A508 /* SessionService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionService.swift; sourceTree = "<group>"; };
 		7FE2EDE2239E23B30079A508 /* UserDefaultsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultsManager.swift; sourceTree = "<group>"; };
 		7FEF117E23C0BF8000F3E669 /* MetaModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetaModelTests.swift; sourceTree = "<group>"; };
 		7FEF118023C0D09200F3E669 /* GiphyModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiphyModelTests.swift; sourceTree = "<group>"; };
@@ -262,7 +259,6 @@
 			children = (
 				639A6DCF24124077008F1D1F /* NetworkService.swift */,
 				7F71926F23C2D5F7008339D4 /* ReferenceError.swift */,
-				7FE2EDDC239E23160079A508 /* SessionService.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -600,7 +596,6 @@
 				7F8C619A23BF2259002BD830 /* BasicImageModel.swift in Sources */,
 				7FF105FE23E9060700354D30 /* ResultsStack.swift in Sources */,
 				63803A5F2415E135002DBFDA /* ActivityIndicatorView.swift in Sources */,
-				7FE2EDDE239E23160079A508 /* SessionService.swift in Sources */,
 				7F8C619623BF1D31002BD830 /* GiphyModel.swift in Sources */,
 				7F2B947623EA4AB900F966F3 /* LaunchScreenView.swift in Sources */,
 				7F2668B723A8758900FA8A7C /* SelectorView.swift in Sources */,
@@ -644,7 +639,6 @@
 				7FF1060123E91B1E00354D30 /* ResultsStack.swift in Sources */,
 				7F8C61B023BF94ED002BD830 /* ImageDataModelTests.swift in Sources */,
 				63803A622415E2A4002DBFDA /* ReferenceError.swift in Sources */,
-				633242A9241642AE004F4BF4 /* SessionService.swift in Sources */,
 				7FF1060023E918DA00354D30 /* ResultsStackTests.swift in Sources */,
 				63B3663124163B2D00348CF1 /* DataSource.swift in Sources */,
 				7F992BBB23E00D0A00262548 /* UserDefaultsManagerTests.swift in Sources */,

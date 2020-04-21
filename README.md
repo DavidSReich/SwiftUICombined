@@ -34,7 +34,7 @@ Information hiding
 
 It also has:
 
-Most results/respones now use Result<T, ReferenceError> objects.
+Most results/respones now use Result<T, ReferenceError> objects.  Been mostly replaced by AnyPublisher<>.
 
 Data:
 
@@ -44,10 +44,9 @@ Data:
 Networking:
 
 * URLSession dataTask extension
-* Alamofire Session dataTask extension
 * HTTPURLResponse validation extension
 * Data decode<T> extension
-* Session services and NetworkServices - on top of URLSession and Session - both with and without an RxSwift wrapper
+* NetworkServices
 
 * Screen Views -
     * Main
