@@ -36,7 +36,7 @@ extension HTTPURLResponse {
     static func validateDataError(data: Data?,
                                   response: URLResponse?,
                                   mimeType: String?,
-                                  not200Handler: HTTPURLResponseNot200? = nil) -> DataResult {
+                                  not200Handler: HTTPURLResponseNot200? = nil) -> Result<Data, ReferenceError> {
 
         guard let response = response else {
             print("No response.")

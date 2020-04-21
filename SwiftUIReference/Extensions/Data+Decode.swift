@@ -9,9 +9,6 @@
 import Foundation
 import Combine
 
-public typealias DataResult = Result<Data, ReferenceError>
-public typealias DataPublisher = AnyPublisher<Data, ReferenceError>
-
 extension Data {
     func decodeData<T: Decodable>() -> Result<T, ReferenceError> {
         let decoder = JSONDecoder()

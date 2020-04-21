@@ -9,6 +9,8 @@
 import Foundation
 import Combine
 
+public typealias DataPublisher = AnyPublisher<Data, ReferenceError>
+
 class NetworkService {
     func getDataPublisher(urlString: String,
                           mimeType: String,
