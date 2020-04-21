@@ -30,8 +30,7 @@ class DataSource {
 
         dataPublisher
             .flatMap(maxPublishers: .max(1)) { data -> AnyPublisher<GiphyModel, ReferenceError> in
-                let ssws: AnyPublisher<GiphyModel, ReferenceError> = data.decodeData()
-                return ssws
+                return data.decodeData() as AnyPublisher<GiphyModel, ReferenceError>
         }
         .receive(on: DispatchQueue.main)
         .sink(receiveCompletion: { value in
@@ -45,7 +44,7 @@ class DataSource {
             guard let self = self else { return }
             self.resultsStack.pushResults(title: tagString, values: ImageDataModel.getWrappedImageModels(from: giphyModel))
         })
-            .store(in: &disposables)
+        .store(in: &disposables)
     }
 
     var resultsDepth: Int {

@@ -8,7 +8,9 @@
 
 import Foundation
 
-class SolitaryViewModel {
+class SolitaryViewModel: ObservableObject {
+
+    @Published var imageModels: [ImageDataModelProtocolWrapper] = []
 
     private let settingsButtonText = "Settings"
     private let pickTagsButtonText = "Pick Tags"
@@ -67,23 +69,20 @@ class SolitaryViewModel {
     // DataSource:
 
     func goBackOneLevel() {
-        _ = dataSource.popResults()
+        imageModels = dataSource.popResults() ?? []
     }
 
     func goBackToTop() {
-        _ = dataSource.popToTop()
+        imageModels = dataSource.popToTop() ?? []
     }
 
     func clearDataSource() {
         dataSource.clearAllResults()
+        imageModels = dataSource.currentResults ?? []
     }
 
     var tagsArray: [String] {
         dataSource.tagsArray
-    }
-
-    var imageModels: [ImageDataModelProtocolWrapper] {
-        return dataSource.currentResults ?? [ImageDataModelProtocolWrapper]()
     }
 
     func populateDataSource(imageTags: String, completion: @escaping (_ referenceError: ReferenceError?) -> Void) {
@@ -91,8 +90,10 @@ class SolitaryViewModel {
         let urlString = userSettings.getFullUrlString(tags: imageTags)
 
         dataSource.getData(tagString: imageTags,
-                                        urlString: urlString,
-                                        mimeType: "application/json",
-                                        completion: completion)
+                           urlString: urlString,
+                           mimeType: "application/json") { refError in
+                            self.imageModels = self.dataSource.currentResults ?? []
+                            completion(refError)
+        }
     }
 }

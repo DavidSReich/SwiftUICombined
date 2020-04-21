@@ -18,9 +18,8 @@ import SwiftUI
 
 struct SolitaryMainView: View {
 
-    @State var solitaryViewModel: SolitaryViewModel
+    @ObservedObject var solitaryViewModel: SolitaryViewModel
 
-    @State private var imageModels = [ImageDataModelProtocolWrapper]()
     @State private var nextImageTags = ""
     @State private var showingSelectorView = false
     @State private var showingSettingsView = false
@@ -30,6 +29,8 @@ struct SolitaryMainView: View {
     @State private var alertMessageString: String?
 
     @State private var isLoading = false
+
+    @State private var alreadyAppeared = false  //has to be @State so it can be changed
 
     // body used to be a lot more complicated, but still is helped by breaking it down into several funcs
     var body: some View {
@@ -64,8 +65,17 @@ struct SolitaryMainView: View {
         VStack {
             baseListWithNavBarView(geometry: geometry)
             .navigationBarTitle(Text(solitaryViewModel.title), displayMode: .inline)
-            .onAppear(perform: loadEverything)
+            .onAppear(perform: onAppearLoadEverything)
         }
+    }
+
+    private func onAppearLoadEverything() {
+        if alreadyAppeared {
+            return
+        }
+
+        alreadyAppeared = true
+        loadEverything()
     }
 
     private func baseListWithNavBarView(geometry: GeometryProxy) -> some View {
@@ -77,9 +87,9 @@ struct SolitaryMainView: View {
     }
 
     private func basicImageList() -> some View {
-        List(imageModels.indices, id: \.self) { index in
-            NavigationLink(destination: ImageView(imageModel: self.imageModels[index].imageModel)) {
-                ImageRowView(imageModel: self.imageModels[index].imageModel, showOnLeft: index.isMultiple(of: 2))
+        List(solitaryViewModel.imageModels.indices, id: \.self) { index in
+            NavigationLink(destination: ImageView(imageModel: self.solitaryViewModel.imageModels[index].imageModel)) {
+                ImageRowView(imageModel: self.solitaryViewModel.imageModels[index].imageModel, showOnLeft: index.isMultiple(of: 2))
             }
         }
     }
@@ -122,7 +132,6 @@ struct SolitaryMainView: View {
         .sheet(isPresented: $showingSelectorView, onDismiss: {
             if !self.nextImageTags.isEmpty {
                 self.solitaryViewModel.tagString = self.nextImageTags
-                self.settingsChanged = true
                 self.loadEverything()
             }
         }) {
@@ -133,29 +142,20 @@ struct SolitaryMainView: View {
     }
 
     private func loadEverything() {
-        //use settingsChanged in case .onAppear is triggered more than once.
-        //we should not assume that we have a reliable SwiftUI View lifecycle model at this time
-        guard settingsChanged else {
-            return
-        }
-        settingsChanged = false
-
         // reset
-        self.imageModels.removeAll()
+        solitaryViewModel.imageModels.removeAll()
 
         isLoading = true
-        solitaryViewModel.populateDataSource(imageTags: solitaryViewModel.tagString) { referenceError in
-            self.isLoading = false
-            if let referenceError = referenceError {
-                //handle error
-                print("\(referenceError)")
-                self.alertMessageString = referenceError.errorDescription
-                self.showingAlert = true
-                return
-            }
-
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                self.imageModels = self.solitaryViewModel.imageModels
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            self.solitaryViewModel.populateDataSource(imageTags: self.solitaryViewModel.tagString) { referenceError in
+                self.isLoading = false
+                if let referenceError = referenceError {
+                    //handle error
+                    print("\(referenceError)")
+                    self.alertMessageString = referenceError.errorDescription
+                    self.showingAlert = true
+                    return
+                }
             }
         }
     }
@@ -165,11 +165,6 @@ struct SolitaryMainView: View {
             solitaryViewModel.goBackToTop()
         } else {
             solitaryViewModel.goBackOneLevel()
-        }
-
-        self.imageModels.removeAll()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            self.imageModels = self.solitaryViewModel.imageModels
         }
     }
 }
