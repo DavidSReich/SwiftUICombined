@@ -23,12 +23,6 @@ struct SolitaryMainView: View {
     @State private var nextImageTags = ""
     @State private var showingSelectorView = false
     @State private var showingSettingsView = false
-    @State private var settingsChanged = true
-
-    @State private var showingAlert = false
-    @State private var alertMessageString: String?
-
-    @State private var isLoading = false
 
     @State private var alreadyAppeared = false  //has to be @State so it can be changed
 
@@ -37,26 +31,26 @@ struct SolitaryMainView: View {
         NavigationView {
             ZStack {
                 GeometryReader { geometry in
-                    self.mainView(geometry: geometry).opacity(self.isLoading ? 0.25 : 1.0)
+                    self.mainView(geometry: geometry).opacity(self.solitaryViewModel.isLoading ? 0.25 : 1.0)
                 }
 
                 Group {
-                    if isLoading {
+                    if solitaryViewModel.isLoading {
                         ActivityIndicatorView(style: .large)
                     }
                 }
             }
         }
         .navigationViewStyle(StackNavigationViewStyle())
-        .alert(isPresented: $showingAlert) {
+        .alert(isPresented: $solitaryViewModel.showingAlert) {
             if UserDefaultsManager.hasAPIKey() {
                 return Alert(title: Text("Something went wrong!"),
-                      message: Text( alertMessageString ?? "Unknown error!!??!!"),
-                      dismissButton: .default(Text("OK ... I guess")))
+                             message: Text(solitaryViewModel.errorString),
+                             dismissButton: .default(Text("OK ... I guess")))
             } else {
                 return Alert(title: Text("API Key is missing"),
-                      message: Text("Go to Settings to enter an API Key"),
-                      dismissButton: .default(Text("OK ... I guess")))
+                             message: Text("Go to Settings to enter an API Key"),
+                             dismissButton: .default(Text("OK ... I guess")))
             }
         }
     }
@@ -98,7 +92,7 @@ struct SolitaryMainView: View {
         // swiftlint:disable multiple_closures_with_trailing_closure
         Button(action: {
             if self.solitaryViewModel.isBackButtonSettings {
-                self.settingsChanged = false
+                self.solitaryViewModel.settingsChanged = false
                 self.showingSettingsView = true
             } else {
                 self.goBack(toTop: false)
@@ -108,7 +102,7 @@ struct SolitaryMainView: View {
             Text(solitaryViewModel.backButtonText).frame(width: geometry.size.width * 0.25).lineLimit(1)
         }
         .sheet(isPresented: $showingSettingsView, onDismiss: {
-            if self.settingsChanged {
+            if self.solitaryViewModel.settingsChanged {
                 self.solitaryViewModel.clearDataSource()
                 self.loadEverything()
             }
@@ -116,7 +110,7 @@ struct SolitaryMainView: View {
             SettingsView(isPresented: self.$showingSettingsView,
                          userSettings: self.$solitaryViewModel.userSettings,
                          tags: self.$solitaryViewModel.tagString,
-                         settingsChanged: self.$settingsChanged)
+                         settingsChanged: self.$solitaryViewModel.settingsChanged)
         }
     }
 
@@ -145,18 +139,8 @@ struct SolitaryMainView: View {
         // reset
         solitaryViewModel.imageModels.removeAll()
 
-        isLoading = true
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            self.solitaryViewModel.populateDataSource(imageTags: self.solitaryViewModel.tagString) { referenceError in
-                self.isLoading = false
-                if let referenceError = referenceError {
-                    //handle error
-                    print("\(referenceError)")
-                    self.alertMessageString = referenceError.errorDescription
-                    self.showingAlert = true
-                    return
-                }
-            }
+            self.solitaryViewModel.populateDataSource(imageTags: self.solitaryViewModel.tagString)
         }
     }
 

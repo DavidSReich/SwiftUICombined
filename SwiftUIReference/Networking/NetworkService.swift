@@ -28,7 +28,10 @@ class NetworkService {
                 .dataTask(error: error)
         }
         .flatMap(maxPublishers: .max(1)) { result in
-            return HTTPURLResponse.validateData(data: result.data, response: result.response, mimeType: mimeType)
+            return HTTPURLResponse.validateData(data: result.data,
+                                                response: result.response,
+                                                mimeType: mimeType,
+                                                not200Handler: not200Handler)
         }
         .eraseToAnyPublisher()
     }

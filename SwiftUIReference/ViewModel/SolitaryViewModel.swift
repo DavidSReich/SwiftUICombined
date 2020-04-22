@@ -11,6 +11,11 @@ import Foundation
 class SolitaryViewModel: ObservableObject {
 
     @Published var imageModels: [ImageDataModelProtocolWrapper] = []
+    @Published var isLoading = false
+    @Published var showingAlert = false
+    @Published var settingsChanged = true
+
+    private var lastReferenceError: ReferenceError?
 
     private let settingsButtonText = "Settings"
     private let pickTagsButtonText = "Pick Tags"
@@ -66,6 +71,10 @@ class SolitaryViewModel: ObservableObject {
         isRightButtonPickTags ? pickTagsButtonText : startButtonText
     }
 
+    var errorString: String {
+        lastReferenceError?.errorDescription ?? ""
+    }
+
     // DataSource:
 
     func goBackOneLevel() {
@@ -85,15 +94,21 @@ class SolitaryViewModel: ObservableObject {
         dataSource.tagsArray
     }
 
-    func populateDataSource(imageTags: String, completion: @escaping (_ referenceError: ReferenceError?) -> Void) {
+    func populateDataSource(imageTags: String) {
         self.imageTags = imageTags
         let urlString = userSettings.getFullUrlString(tags: imageTags)
+
+        showingAlert = false
+        isLoading = true
+        lastReferenceError = nil
 
         dataSource.getData(tagString: imageTags,
                            urlString: urlString,
                            mimeType: "application/json") { refError in
                             self.imageModels = self.dataSource.currentResults ?? []
-                            completion(refError)
+                            self.lastReferenceError = refError
+                            self.isLoading = false
+                            self.showingAlert = refError != nil
         }
     }
 }
