@@ -8,14 +8,6 @@
 
 import SwiftUI
 
-/*
- This is based on PlainMainView.
- SwiftUI currently has problems with navigation which break some of the features in PlainMainView.
- Avoid this problem altogether ...
- Stay in one View and stack up the searches.
- Pop them when the back button is pressed.
- */
-
 struct SolitaryMainView: View {
 
     @ObservedObject var solitaryViewModel: SolitaryViewModel
